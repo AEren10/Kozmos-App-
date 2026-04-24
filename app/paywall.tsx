@@ -18,7 +18,7 @@ import { colors, fonts } from "@/constants/theme";
 import { gradients } from "@/constants/designTokens";
 
 const FEATURES: Feature[] = [
-  { icon: "♃", label: "Sınırsız soru", desc: "yıldızlara istediğin kadar sor" },
+  { icon: "♀", label: "Sınırsız soru", desc: "yıldızlara istediğin kadar sor" },
   { icon: "☿", label: "Retrograd uyarıları", desc: "günlük transit bildirimleri" },
   { icon: "♀", label: "Derin sinastri", desc: "birebir uyumluluk analizi" },
   { icon: "☽", label: "Rüya günlüğü", desc: "ay ile ilişkilendirilmiş notlar" },
@@ -45,6 +45,7 @@ export default function Paywall() {
       false,
     );
   }, [glow]);
+
   const ctaGlowStyle = useAnimatedStyle(() => ({ shadowOpacity: glow.value }));
 
   const close = () => {
@@ -59,6 +60,7 @@ export default function Paywall() {
       close();
       return;
     }
+
     setPurchasing(true);
     try {
       await purchasePlan(plan);
@@ -107,39 +109,36 @@ export default function Paywall() {
       />
       <Starfield seed={77} count={60} />
 
-      <View style={{ position: "absolute", top: 80, left: 0, right: 0, alignItems: "center" }}>
+      <View style={styles.ringsWrap}>
         <Rotator duration={25000}>
           <OrbitRings size={320} color="rgba(196,170,255,0.18)" count={3} />
         </Rotator>
       </View>
 
       <SafeAreaView style={{ flex: 1 }} edges={["top", "bottom"]}>
-        <ScrollView contentContainerStyle={{ flexGrow: 1, paddingHorizontal: 20, paddingTop: 40, paddingBottom: 20 }}>
+        <ScrollView contentContainerStyle={styles.scroll} showsVerticalScrollIndicator={false}>
           <Pressable onPress={close} style={styles.close}>
             <Text style={{ color: colors.textDim, fontSize: 24 }}>×</Text>
           </Pressable>
 
-          <FadeUp delay={50} style={{ alignItems: "center" }}>
-            <LinearGradient
-              colors={gradients.badge as any}
-              start={{ x: 0, y: 0 }}
-              end={{ x: 1, y: 1 }}
-              style={styles.badge}
-            >
-              <Text style={styles.badgeText}>✦  KOZMOS PRO</Text>
+          <FadeUp delay={50}>
+            <LinearGradient colors={gradients.badge as any} start={{ x: 0, y: 0 }} end={{ x: 1, y: 1 }} style={styles.badge}>
+              <Text style={styles.badgeText}>✦ KOZMOS PRO</Text>
             </LinearGradient>
+
             <Text style={styles.hero}>
               yıldızlar seninle{"\n"}
               <Text style={{ color: colors.accent }}>her zaman konuşsun.</Text>
             </Text>
-            <Text style={{ fontSize: 13, color: colors.textDim, textAlign: "center", marginTop: 10, lineHeight: 20 }}>
+
+            <Text style={styles.sub}>
               tam deneyim için kozmos pro'ya geç.
             </Text>
           </FadeUp>
 
           <FeatureList features={FEATURES} />
 
-          <View style={{ flexDirection: "row", gap: 10, marginTop: 24 }}>
+          <View style={styles.planRow}>
             <PlanCard
               label="Yıllık"
               price="₺29/ay"
@@ -159,17 +158,7 @@ export default function Paywall() {
           <View style={{ flex: 1 }} />
 
           <FadeUp delay={350} style={{ marginTop: 24 }}>
-            <Animated.View
-              style={[
-                {
-                  borderRadius: 27,
-                  shadowColor: "#c4a4ff",
-                  shadowRadius: 24,
-                  shadowOffset: { width: 0, height: 0 },
-                },
-                ctaGlowStyle,
-              ]}
-            >
+            <Animated.View style={[styles.ctaWrap, ctaGlowStyle]}>
               <Button onPress={onPurchase} loading={purchasing}>7 Gün Ücretsiz Dene ✦</Button>
             </Animated.View>
 
@@ -189,8 +178,67 @@ export default function Paywall() {
 }
 
 const styles = StyleSheet.create({
-  close: { position: "absolute", top: 8, right: 12, width: 36, height: 36, alignItems: "center", justifyContent: "center", zIndex: 10 },
-  badge: { paddingHorizontal: 16, paddingVertical: 6, borderRadius: 99, marginBottom: 18 },
-  badgeText: { fontSize: 11, fontFamily: fonts.mono, color: "#1a0e3d", fontWeight: "700", letterSpacing: 2 },
-  hero: { fontFamily: fonts.display, fontSize: 32, color: "#fff", textAlign: "center", lineHeight: 38 },
+  ringsWrap: {
+    position: "absolute",
+    top: 80,
+    left: 0,
+    right: 0,
+    alignItems: "center",
+  },
+  scroll: {
+    flexGrow: 1,
+    paddingHorizontal: 20,
+    paddingTop: 48,
+    paddingBottom: 20,
+  },
+  close: {
+    position: "absolute",
+    top: 8,
+    right: 12,
+    width: 36,
+    height: 36,
+    alignItems: "center",
+    justifyContent: "center",
+    zIndex: 10,
+  },
+  badge: {
+    paddingHorizontal: 16,
+    paddingVertical: 6,
+    borderRadius: 99,
+    marginBottom: 18,
+    alignSelf: "flex-start",
+  },
+  badgeText: {
+    fontSize: 11,
+    fontFamily: fonts.mono,
+    color: "#1a0e3d",
+    fontWeight: "700",
+    letterSpacing: 2,
+  },
+  hero: {
+    fontFamily: fonts.display,
+    fontSize: 32,
+    color: "#fff",
+    textAlign: "left",
+    lineHeight: 38,
+    maxWidth: 260,
+  },
+  sub: {
+    fontSize: 13,
+    color: colors.textDim,
+    marginTop: 10,
+    lineHeight: 20,
+    maxWidth: 220,
+  },
+  planRow: {
+    flexDirection: "row",
+    gap: 10,
+    marginTop: 24,
+  },
+  ctaWrap: {
+    borderRadius: 27,
+    shadowColor: "#c4a4ff",
+    shadowRadius: 24,
+    shadowOffset: { width: 0, height: 0 },
+  },
 });

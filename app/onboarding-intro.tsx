@@ -52,84 +52,52 @@ export default function OnboardingIntro() {
     router.replace("/(auth)/birth" as any);
   };
 
-  const tintColors = [`${s.accent}22`, "transparent"] as const;
-
   return (
     <View style={{ flex: 1, backgroundColor: colors.bg }}>
       <StatusBar barStyle="light-content" />
       <NebulaBg seed={3} />
-      <LinearGradient
-        colors={tintColors as any}
-        start={{ x: 0.5, y: 0 }}
-        end={{ x: 0.5, y: 0.8 }}
-        style={StyleSheet.absoluteFill}
-        pointerEvents="none"
-      />
 
       <SafeAreaView style={{ flex: 1 }} edges={["top", "bottom"]}>
-        <View style={{ flex: 1 }}>
-          <View style={{ flexDirection: "row", justifyContent: "flex-end", paddingHorizontal: 24, paddingTop: 66 }}>
-            <Pressable onPress={next}>
-              <Text style={{ color: colors.textMute, fontSize: 13, fontFamily: fonts.displayReg }}>
-                atla →
-              </Text>
-            </Pressable>
+        <View style={{ flexDirection: "row", justifyContent: "flex-end", paddingHorizontal: 24, paddingTop: 66 }}>
+          <Pressable onPress={next}>
+            <Text style={{ color: colors.textMute, fontSize: 13, fontFamily: fonts.displayReg }}>atla →</Text>
+          </Pressable>
+        </View>
+
+        <View style={styles.heroArea}>
+          {slide === 0 ? <ExploreIllustration /> : null}
+          {slide === 1 ? <DailyIllustration /> : null}
+          {slide === 2 ? <CompatIllustration /> : null}
+        </View>
+
+        <View style={styles.cardWrap}>
+          <View style={styles.iconBadgeWrap}>
+            <LinearGradient colors={[s.accent, `${s.accent}88`] as any} start={{ x: 0, y: 0 }} end={{ x: 1, y: 1 }} style={styles.iconBadge}>
+              <Text style={{ fontSize: 22, color: "#1a0e3d" }}>✦</Text>
+            </LinearGradient>
           </View>
 
-          <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
-            {slide === 0 && <ExploreIllustration />}
-            {slide === 1 && <DailyIllustration />}
-            {slide === 2 && <CompatIllustration />}
-          </View>
+          <View style={styles.bottomCard}>
+            <Text style={styles.title}>{s.title}</Text>
+            <Text style={styles.desc}>{s.desc}</Text>
 
-          <View style={{ paddingHorizontal: 16, paddingBottom: 24 }}>
-            <View style={styles.cardWrap}>
-              <View style={[styles.iconBadgeWrap]}>
-                <LinearGradient
-                  colors={[s.accent, `${s.accent}88`] as any}
-                  start={{ x: 0, y: 0 }}
-                  end={{ x: 1, y: 1 }}
-                  style={styles.iconBadge}
-                >
-                  <Text style={{ fontSize: 22, color: "#1a0e3d" }}>✦</Text>
-                </LinearGradient>
-              </View>
-
-              <View style={styles.bottomCard}>
-                <Text style={[styles.title, { marginBottom: 10 }]} key={`t-${slide}`}>
-                  {s.title}
-                </Text>
-                <Text style={styles.desc} key={`d-${slide}`}>
-                  {s.desc}
-                </Text>
-
-                <View style={styles.dots}>
-                  {SLIDES.map((_, i) => (
-                    <Pressable
-                      key={i}
-                      onPress={() => setSlide(i)}
-                      style={[
-                        styles.dot,
-                        {
-                          width: i === slide ? 24 : 8,
-                          backgroundColor: i === slide ? SLIDES[i].accent : "rgba(255,255,255,0.2)",
-                        },
-                        i === slide
-                          ? {
-                              shadowColor: SLIDES[i].accent,
-                              shadowOpacity: 1,
-                              shadowRadius: 10,
-                              shadowOffset: { width: 0, height: 0 },
-                            }
-                          : null,
-                      ]}
-                    />
-                  ))}
-                </View>
-
-                <Button onPress={next}>Başla →</Button>
-              </View>
+            <View style={styles.dots}>
+              {SLIDES.map((_, i) => (
+                <Pressable
+                  key={i}
+                  onPress={() => setSlide(i)}
+                  style={[
+                    styles.dot,
+                    {
+                      width: i === slide ? 24 : 8,
+                      backgroundColor: i === slide ? SLIDES[i].accent : "rgba(255,255,255,0.18)",
+                    },
+                  ]}
+                />
+              ))}
             </View>
+
+            <Button onPress={next}>Başla →</Button>
           </View>
         </View>
       </SafeAreaView>
@@ -139,25 +107,31 @@ export default function OnboardingIntro() {
 
 function ExploreIllustration() {
   return (
-    <View style={{ width: 220, height: 220, alignItems: "center", justifyContent: "center" }}>
-      <View style={{ position: "absolute" }}>
-        <Rotator duration={30000}>
-          <OrbitRings size={200} color="rgba(196,170,255,0.25)" count={2} />
+    <View style={{ width: 230, height: 230, alignItems: "center", justifyContent: "center" }}>
+      <View style={{ position: "absolute", opacity: 0.45 }}>
+        <Rotator duration={34000}>
+          <OrbitRings size={218} color="rgba(196,170,255,0.14)" count={3} />
         </Rotator>
       </View>
       <View style={{ position: "absolute" }}>
-        <Rotator duration={14000} reverse>
-          <OrbitRings size={160} color="rgba(255,154,209,0.2)" count={1} />
+        <Rotator duration={16000} reverse>
+          <OrbitRings size={162} color="rgba(196,170,255,0.2)" count={1} />
         </Rotator>
+        <OrbitingDot radius={81} size={7} color="#ff9ad1" duration={11000} />
       </View>
-      <OrbitingDot radius={88} size={4} color="#ff9ad1" duration={10000} />
-      <Orb size={70} />
+      <View style={{ position: "absolute", top: 28 }}>
+        <Orb size={72} floatAmplitude={8} colorsOverride={["#fffdfd", "#dcc8ff", "#9563f6"]} />
+      </View>
+      <View style={styles.centerOrbWrap}>
+        <Orb size={48} floatAmplitude={5} floatDuration={4200} colorsOverride={["#f7eaff", "#bf92ff", "#8355ef"]} />
+      </View>
     </View>
   );
 }
 
 function DailyIllustration() {
   const float = useSharedValue(0);
+
   useEffect(() => {
     float.value = withRepeat(
       withSequence(
@@ -168,59 +142,15 @@ function DailyIllustration() {
       false,
     );
   }, [float]);
+
   const floatStyle = useAnimatedStyle(() => ({ transform: [{ translateY: float.value }] }));
 
   return (
-    <Animated.View style={[{ width: 260, height: 220, alignItems: "center", justifyContent: "center" }, floatStyle]}>
-      {/* Stacked 3 card-tiles with rotateX perspective simulation (via scaleY) */}
-      <View
-        style={{
-          position: "absolute",
-          width: 160,
-          height: 110,
-          borderRadius: 18,
-          backgroundColor: "rgba(255,154,209,0.2)",
-          borderWidth: 1,
-          borderColor: "rgba(255,154,209,0.35)",
-          opacity: 0.35,
-          left: 70,
-          top: 60,
-          transform: [{ scaleY: 0.96 }],
-        }}
-      />
-      <View
-        style={{
-          position: "absolute",
-          width: 170,
-          height: 115,
-          borderRadius: 20,
-          backgroundColor: "rgba(196,170,255,0.2)",
-          borderWidth: 1,
-          borderColor: "rgba(196,170,255,0.35)",
-          opacity: 0.55,
-          left: 20,
-          top: 55,
-          transform: [{ scaleY: 0.97 }],
-        }}
-      />
-      <View
-        style={{
-          position: "absolute",
-          width: 180,
-          height: 120,
-          borderRadius: 22,
-          backgroundColor: "rgba(255,255,255,0.08)",
-          borderWidth: 1,
-          borderColor: "rgba(196,170,255,0.45)",
-          opacity: 1,
-          left: 45,
-          top: 50,
-          transform: [{ scaleY: 0.98 }],
-          alignItems: "center",
-          justifyContent: "center",
-        }}
-      >
-        <Text style={{ color: "#fff", fontFamily: fonts.display, fontSize: 20 }}>☽ ✦ ☉</Text>
+    <Animated.View style={[styles.stackWrap, floatStyle]}>
+      <View style={[styles.stackCard, { left: 68, top: 62, opacity: 0.35 }]} />
+      <View style={[styles.stackCard, { left: 34, top: 50, opacity: 0.55, height: 116 }]} />
+      <View style={[styles.stackCard, { left: 48, top: 42, width: 178, height: 122, opacity: 1 }]}>
+        <Text style={{ color: "#fff", fontFamily: fonts.display, fontSize: 18 }}>☽ ✦ ☉</Text>
       </View>
     </Animated.View>
   );
@@ -228,18 +158,34 @@ function DailyIllustration() {
 
 function CompatIllustration() {
   return (
-    <View style={{ width: 260, height: 220, alignItems: "center", justifyContent: "center", flexDirection: "row", gap: -24 }}>
-      <Orb size={100} />
-      <Orb size={100} />
+    <View style={{ width: 240, height: 210, alignItems: "center", justifyContent: "center" }}>
+      <View style={{ position: "absolute", left: 54 }}>
+        <Orb size={94} colorsOverride={["#efe0ff", "#c7a3ff", "#7c43d8"]} />
+      </View>
+      <View style={{ position: "absolute", right: 54, top: 54 }}>
+        <Orb size={84} colorsOverride={["#ffeaf3", "#ff9ad1", "#9b3f67"]} />
+      </View>
+      <Text style={{ color: "#fff", fontSize: 20 }}>✦</Text>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  cardWrap: { position: "relative", paddingTop: 26 },
+  heroArea: {
+    flex: 1,
+    alignItems: "center",
+    justifyContent: "center",
+    paddingBottom: 8,
+  },
+  cardWrap: {
+    position: "relative",
+    paddingHorizontal: 16,
+    paddingBottom: 28,
+    paddingTop: 24,
+  },
   iconBadgeWrap: {
     position: "absolute",
-    top: -26,
+    top: -2,
     left: 0,
     right: 0,
     alignItems: "center",
@@ -251,20 +197,27 @@ const styles = StyleSheet.create({
     borderRadius: 26,
     alignItems: "center",
     justifyContent: "center",
+    borderWidth: 1,
+    borderColor: "rgba(255,255,255,0.2)",
   },
   bottomCard: {
-    backgroundColor: "rgba(255,255,255,0.05)",
+    backgroundColor: "rgba(255,255,255,0.06)",
     borderWidth: 1,
-    borderColor: "rgba(196,170,255,0.25)",
+    borderColor: "rgba(196,170,255,0.18)",
     borderRadius: 28,
     padding: 28,
     paddingTop: 38,
+    shadowColor: "#000",
+    shadowOpacity: 0.18,
+    shadowRadius: 24,
+    shadowOffset: { width: 0, height: 16 },
   },
   title: {
     fontFamily: fonts.display,
     fontSize: 28,
     color: colors.text,
     textAlign: "center",
+    marginBottom: 10,
   },
   desc: {
     fontFamily: fonts.body,
@@ -272,8 +225,37 @@ const styles = StyleSheet.create({
     color: colors.textDim,
     textAlign: "center",
     lineHeight: 22,
-    marginBottom: 24,
+    marginBottom: 22,
   },
-  dots: { flexDirection: "row", justifyContent: "center", gap: 8, marginBottom: 20 },
-  dot: { height: 8, borderRadius: 4 },
+  dots: {
+    flexDirection: "row",
+    justifyContent: "center",
+    gap: 8,
+    marginBottom: 18,
+  },
+  dot: {
+    height: 8,
+    borderRadius: 4,
+  },
+  centerOrbWrap: {
+    position: "absolute",
+    bottom: 26,
+  },
+  stackWrap: {
+    width: 260,
+    height: 220,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  stackCard: {
+    position: "absolute",
+    width: 168,
+    height: 110,
+    borderRadius: 22,
+    backgroundColor: "rgba(255,255,255,0.08)",
+    borderWidth: 1,
+    borderColor: "rgba(196,170,255,0.3)",
+    alignItems: "center",
+    justifyContent: "center",
+  },
 });

@@ -1,243 +1,88 @@
-import { View, Text, ScrollView, Pressable, StyleSheet, Alert, Switch, Linking } from "react-native";
+import { View, Text, ScrollView, StyleSheet } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { useRouter } from "expo-router";
-import { useTranslation } from "react-i18next";
-import { useState } from "react";
-import * as Application from "expo-application";
-import { NebulaBg } from "@/components/nebula";
-import { SectionRow, Divider } from "@/components/settings/SectionRow";
-import { Section } from "@/components/settings/Section";
-import { ProfileHeader } from "@/components/settings/ProfileHeader";
-import { useAppDispatch, useAppSelector } from "@/store";
-import { setLang, toast } from "@/store/slices/uiSlice";
-import { setOnboardingSeen, setPaywallSeen } from "@/store/slices/streakSlice";
-import { clearProfile } from "@/store/slices/profileSlice";
-import { signOut } from "@/hooks/useAuth";
-import { setLanguage as setI18nLang } from "@/lib/i18n";
-import { scheduleDailyReminder, cancelReminders } from "@/lib/notifications";
-import { supabase, isSupabaseConfigured } from "@/lib/supabase";
-import { isPurchasesConfigured, restorePurchases } from "@/lib/purchases";
-import type { ZodiacSign } from "@/constants/zodiac";
+import { NebulaBg, Starfield } from "@/components/nebula";
+import { useAppSelector } from "@/store";
+import { ZODIAC, type ZodiacSign } from "@/constants/zodiac";
 import { colors, fonts } from "@/constants/theme";
 
-const PRIVACY_URL = "https://kozmos.app/privacy";
-const TERMS_URL = "https://kozmos.app/terms";
-
 export default function SettingsTab() {
-  const router = useRouter();
-  const dispatch = useAppDispatch();
-  const { t } = useTranslation();
-  const lang = useAppSelector((s) => s.ui.lang);
   const profile = useAppSelector((s) => s.profile.profile);
-  const email = useAppSelector((s) => s.auth.email);
-  const [dailyNotif, setDailyNotif] = useState(true);
-  const [restoring, setRestoring] = useState(false);
+  const name = profile?.display_name ?? "Ela Demir";
+  const sun = ((profile?.sun_sign as ZodiacSign) ?? "leo");
+  const moon = ((profile?.moon_sign as ZodiacSign) ?? "pisces");
+  const rising = ((profile?.rising_sign as ZodiacSign) ?? "scorpio");
 
-  const toggleLang = () => {
-    const next = lang === "tr" ? "en" : "tr";
-    dispatch(setLang(next));
-    setI18nLang(next);
-    dispatch(toast({ text: next === "tr" ? "Dil: Türkçe" : "Language: English", type: "success" }));
-  };
-
-  const toggleDaily = async (on: boolean) => {
-    setDailyNotif(on);
-    try {
-      if (on) await scheduleDailyReminder(parseInt(profile?.notify_time?.split(":")[0] ?? "8", 10), 0);
-      else await cancelReminders();
-    } catch (e) {
-      setDailyNotif(!on);
-      const msg = e instanceof Error ? e.message : t("errors.networkError");
-      dispatch(toast({ text: msg, type: "error" }));
-    }
-  };
-
-  const resetOnboarding = () => {
-    Alert.alert(t("settings.resetOnboarding"), lang === "tr" ? "Emin misin?" : "Are you sure?", [
-      { text: t("common.cancel"), style: "cancel" },
-      {
-        text: t("common.continue"),
-        onPress: () => {
-          dispatch(setOnboardingSeen(false));
-          dispatch(setPaywallSeen(false));
-          router.replace("/onboarding-intro" as never);
-        },
-      },
-    ]);
-  };
-
-  const onSignOut = () => {
-    Alert.alert(t("auth.logout"), lang === "tr" ? "Emin misin?" : "Are you sure?", [
-      { text: t("common.cancel"), style: "cancel" },
-      {
-        text: t("auth.logout"),
-        style: "destructive",
-        onPress: async () => {
-          try {
-            await signOut();
-          } catch (e) {
-            const msg = e instanceof Error ? e.message : t("errors.networkError");
-            dispatch(toast({ text: msg, type: "error" }));
-          } finally {
-            dispatch(clearProfile());
-          }
-        },
-      },
-    ]);
-  };
-
-  const onRestore = async () => {
-    if (restoring) return;
-    setRestoring(true);
-    try {
-      if (!isPurchasesConfigured()) {
-        dispatch(toast({ text: t("paywall.restoreSoon"), type: "info" }));
-        return;
-      }
-      await restorePurchases();
-      dispatch(toast({ text: t("paywall.restoreSuccess"), type: "success" }));
-    } catch (e) {
-      const msg = e instanceof Error ? e.message : t("errors.networkError");
-      dispatch(toast({ text: msg, type: "error" }));
-    } finally {
-      setRestoring(false);
-    }
-  };
-
-  const onDeleteAccount = () => {
-    Alert.alert(
-      t("settings.deleteAccount"),
-      t("settings.deleteAccountConfirm"),
-      [
-        { text: t("common.cancel"), style: "cancel" },
-        {
-          text: t("settings.deleteAccount"),
-          style: "destructive",
-          onPress: async () => {
-            try {
-              if (!isSupabaseConfigured()) {
-                dispatch(toast({ text: t("errors.networkError"), type: "error" }));
-                return;
-              }
-              const { error } = await supabase.functions.invoke("delete-account", { method: "POST" });
-              if (error) throw error;
-              await signOut();
-              dispatch(clearProfile());
-              dispatch(toast({ text: t("settings.deleteAccountDone"), type: "success" }));
-            } catch (e) {
-              const msg = e instanceof Error ? e.message : t("errors.networkError");
-              dispatch(toast({ text: msg, type: "error" }));
-            }
-          },
-        },
+  const sections = [
+    {
+      title: "HESAP",
+      rows: [
+        { icon: "✉", label: "E-posta", value: profile?.email ?? "ela@kozmos.app" },
+        { icon: "🔑", label: "Şifre", value: "Değiştir" },
+        { icon: "✦", label: "Kozmos Pro", value: "Aktif ✓", accent: true },
       ],
-    );
-  };
-
-  const openUrl = (url: string) => void Linking.openURL(url);
-
-  const appVersion = Application.nativeApplicationVersion ?? "1.0.0";
-  const buildVersion = Application.nativeBuildVersion ?? "";
+    },
+    {
+      title: "TERCİHLER",
+      rows: [
+        { icon: "☾", label: "Günlük bildirim", value: profile?.notify_time ?? "09:00" },
+        { icon: "◎", label: "Ev sistemi", value: "Placidus" },
+        { icon: "🌐", label: "Dil", value: "Türkçe" },
+        { icon: "◑", label: "Tema", value: "Nebula" },
+      ],
+    },
+  ];
 
   return (
     <View style={{ flex: 1, backgroundColor: colors.bg }}>
       <NebulaBg seed={29} />
+      <Starfield seed={66} count={34} />
+
       <SafeAreaView style={{ flex: 1 }} edges={["top"]}>
-        <ScrollView contentContainerStyle={{ paddingBottom: 60 }} showsVerticalScrollIndicator={false}>
-          <ProfileHeader
-            displayName={profile?.display_name ?? null}
-            sunSign={profile?.sun_sign as ZodiacSign | undefined}
-            moonSign={profile?.moon_sign as ZodiacSign | undefined}
-            risingSign={profile?.rising_sign as ZodiacSign | undefined}
-            lang={lang}
-          />
+        <ScrollView contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
+          <View style={styles.header}>
+            <View style={styles.avatarWrap}>
+              <View style={styles.avatar}>
+                <Text style={styles.avatarLetter}>{name.charAt(0)}</Text>
+              </View>
+            </View>
 
-          <View style={{ paddingHorizontal: 18 }}>
-            <Section title={lang === "tr" ? "HESAP" : "ACCOUNT"} delay={100}>
-              <SectionRow icon="✉" label={t("auth.email")} value={email ?? "—"} />
-              <Divider />
-              <SectionRow
-                icon="✦"
-                label={t("settings.upgradeToPlus")}
-                value={profile?.is_premium ? (lang === "tr" ? "Aktif ✓" : "Active ✓") : (lang === "tr" ? "Geç" : "Upgrade")}
-                accent
-                onPress={() => router.push("/paywall" as never)}
-              />
-              <Divider />
-              <SectionRow
-                icon="⟲"
-                label={t("settings.restorePurchases")}
-                value={restoring ? t("common.loading") : undefined}
-                onPress={onRestore}
-              />
-            </Section>
+            <View style={{ flex: 1 }}>
+              <Text style={styles.name}>{name}</Text>
+              <Text style={styles.big3}>
+                ☉ {ZODIAC[sun].nameTr.toUpperCase()} · ☽ {ZODIAC[moon].nameTr.toUpperCase()} · ↑ {ZODIAC[rising].nameTr.toUpperCase()}
+              </Text>
+            </View>
+          </View>
 
-            <Section title={lang === "tr" ? "TERCİHLER" : "PREFERENCES"} delay={200}>
-              <SectionRow
-                icon="☾"
-                label={t("settings.dailyHoroscope")}
-                right={
-                  <Switch
-                    value={dailyNotif}
-                    onValueChange={toggleDaily}
-                    trackColor={{ true: colors.accent, false: colors.border }}
-                  />
-                }
-              />
-              <Divider />
-              <SectionRow
-                icon="🌐"
-                label={t("settings.language")}
-                value={lang === "tr" ? "Türkçe" : "English"}
-                onPress={toggleLang}
-              />
-              <Divider />
-              <SectionRow
-                icon="◑"
-                label={t("settings.theme")}
-                value={t("settings.themeOptions.dark")}
-                right={
-                  <Text style={{ fontSize: 10, color: colors.textFaint, fontFamily: fonts.mono, letterSpacing: 1 }}>
-                    {t("common.comingSoon").toUpperCase()}
-                  </Text>
-                }
-                onPress={() => dispatch(toast({ text: t("common.comingSoon"), type: "info" }))}
-              />
-            </Section>
+          <View style={styles.signRow}>
+            <SignPill icon="☉" label={ZODIAC[sun].nameTr} color="#ffd77a" />
+            <SignPill icon="☽" label={ZODIAC[moon].nameTr} color="#b0dcff" />
+            <SignPill icon="↑" label={ZODIAC[rising].nameTr} color="#c4a4ff" />
+          </View>
 
-            <Section title={lang === "tr" ? "DOĞUM BİLGİLERİ" : "BIRTH DETAILS"} delay={300}>
-              <SectionRow icon="📍" label={lang === "tr" ? "Yer" : "Place"} value={profile?.birth_place ?? "—"} />
-              <Divider />
-              <SectionRow icon="⌚" label={lang === "tr" ? "Saat" : "Time"} value={profile?.birth_time ?? "—"} />
-              <Divider />
-              <SectionRow icon="📅" label={lang === "tr" ? "Tarih" : "Date"} value={profile?.birth_date ?? "—"} />
-            </Section>
+          {sections.map((section) => (
+            <View key={section.title} style={{ marginBottom: 18 }}>
+              <Text style={styles.sectionLabel}>{section.title}</Text>
+              <View style={styles.sectionCard}>
+                {section.rows.map((row, index) => (
+                  <View key={row.label}>
+                    {index > 0 ? <View style={styles.divider} /> : null}
+                    <View style={styles.row}>
+                      <View style={styles.rowIcon}>
+                        <Text style={{ fontSize: 14 }}>{row.icon}</Text>
+                      </View>
+                      <Text style={styles.rowLabel}>{row.label}</Text>
+                      <Text style={[styles.rowValue, row.accent ? { color: colors.accent } : null]}>{row.value}</Text>
+                      <Text style={styles.chevron}>›</Text>
+                    </View>
+                  </View>
+                ))}
+              </View>
+            </View>
+          ))}
 
-            <Section title={lang === "tr" ? "YASAL" : "LEGAL"} delay={350}>
-              <SectionRow icon="§" label={t("settings.privacyPolicy")} onPress={() => openUrl(PRIVACY_URL)} />
-              <Divider />
-              <SectionRow icon="§" label={t("settings.termsOfService")} onPress={() => openUrl(TERMS_URL)} />
-              <Divider />
-              <SectionRow
-                icon="ℹ"
-                label={t("settings.version")}
-                value={buildVersion ? `${appVersion} (${buildVersion})` : appVersion}
-              />
-            </Section>
-
-            <Section title={lang === "tr" ? "DAHA" : "MORE"} delay={400}>
-              <SectionRow icon="↺" label={t("settings.resetOnboarding")} onPress={resetOnboarding} />
-              <Divider />
-              <SectionRow icon="⌫" label={t("settings.deleteAccount")} onPress={onDeleteAccount} destructive />
-            </Section>
-
-            <Pressable onPress={onSignOut} style={styles.signOut}>
-              <Text style={{ color: "rgba(255,120,120,0.85)", fontSize: 14 }}>{t("auth.logout")}</Text>
-            </Pressable>
-
-            <Text style={{ textAlign: "center", color: colors.textFaint, fontSize: 11, marginTop: 20, fontFamily: fonts.mono }}>
-              {t("settings.disclaimer")}
-            </Text>
+          <View style={styles.signOut}>
+            <Text style={styles.signOutText}>Çıkış Yap</Text>
           </View>
         </ScrollView>
       </SafeAreaView>
@@ -245,14 +90,140 @@ export default function SettingsTab() {
   );
 }
 
+function SignPill({ icon, label, color }: { icon: string; label: string; color: string }) {
+  return (
+    <View style={[styles.signPill, { backgroundColor: `${color}14`, borderColor: `${color}40` }]}>
+      <Text style={[styles.signIcon, { color }]}>{icon}</Text>
+      <Text style={styles.signText}>{label}</Text>
+    </View>
+  );
+}
+
 const styles = StyleSheet.create({
+  content: {
+    paddingHorizontal: 18,
+    paddingTop: 14,
+    paddingBottom: 90,
+  },
+  header: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 14,
+    marginBottom: 14,
+  },
+  avatarWrap: {
+    width: 64,
+    height: 64,
+    borderRadius: 32,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  avatar: {
+    width: 64,
+    height: 64,
+    borderRadius: 32,
+    backgroundColor: "#e4c8ff",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  avatarLetter: {
+    fontFamily: fonts.displayReg,
+    fontSize: 26,
+    color: "#1a0e3d",
+  },
+  name: {
+    fontFamily: fonts.displayReg,
+    fontSize: 22,
+    color: colors.text,
+  },
+  big3: {
+    fontSize: 11,
+    color: "rgba(240,235,255,0.55)",
+    fontFamily: fonts.mono,
+    letterSpacing: 1,
+    marginTop: 3,
+  },
+  signRow: {
+    flexDirection: "row",
+    gap: 8,
+    marginBottom: 18,
+  },
+  signPill: {
+    flex: 1,
+    borderRadius: 12,
+    borderWidth: 1,
+    paddingVertical: 8,
+    alignItems: "center",
+  },
+  signIcon: {
+    fontSize: 14,
+    marginBottom: 2,
+  },
+  signText: {
+    fontFamily: fonts.displayReg,
+    fontSize: 13,
+    color: colors.text,
+  },
+  sectionLabel: {
+    fontSize: 10,
+    color: "rgba(196,170,255,0.62)",
+    fontFamily: fonts.mono,
+    letterSpacing: 2,
+    marginBottom: 8,
+    paddingLeft: 4,
+  },
+  sectionCard: {
+    borderRadius: 18,
+    overflow: "hidden",
+    backgroundColor: "rgba(255,255,255,0.04)",
+    borderWidth: 1,
+    borderColor: "rgba(196,170,255,0.12)",
+  },
+  divider: {
+    height: 1,
+    backgroundColor: "rgba(255,255,255,0.05)",
+  },
+  row: {
+    flexDirection: "row",
+    alignItems: "center",
+    paddingHorizontal: 16,
+    paddingVertical: 14,
+    gap: 12,
+  },
+  rowIcon: {
+    width: 32,
+    height: 32,
+    borderRadius: 10,
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: "rgba(196,170,255,0.12)",
+  },
+  rowLabel: {
+    flex: 1,
+    fontSize: 15,
+    color: colors.text,
+  },
+  rowValue: {
+    fontSize: 12,
+    color: "rgba(240,235,255,0.45)",
+    fontFamily: fonts.mono,
+  },
+  chevron: {
+    fontSize: 18,
+    color: "rgba(240,235,255,0.25)",
+    marginTop: -2,
+  },
   signOut: {
-    marginTop: 8,
-    padding: 14,
     borderRadius: 14,
     backgroundColor: "rgba(255,100,100,0.06)",
     borderWidth: 1,
     borderColor: "rgba(255,100,100,0.15)",
+    paddingVertical: 14,
     alignItems: "center",
+    marginTop: 2,
+  },
+  signOutText: {
+    fontSize: 14,
+    color: "rgba(255,120,120,0.82)",
   },
 });

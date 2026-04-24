@@ -203,12 +203,12 @@ export default function Login() {
 const styles = StyleSheet.create({
   orbWrap: {
     position: "absolute",
-    top: 60,
-    left: 0,
-    right: 0,
+    top: 44,
+    right: -14,
+    width: 240,
+    height: 240,
     alignItems: "center",
     justifyContent: "center",
-    height: 200,
     zIndex: 2,
   },
   logoWrap: {
@@ -233,7 +233,7 @@ const styles = StyleSheet.create({
   tagline: {
     fontSize: 11,
     fontFamily: fonts.mono,
-    color: "rgba(240,235,255,0.5)",
+    color: "rgba(240,235,255,0.58)",
     marginTop: 8,
     textAlign: "center",
     paddingHorizontal: 30,
@@ -244,11 +244,11 @@ const styles = StyleSheet.create({
     bottom: 0,
     left: 0,
     right: 0,
-    height: 460,
+    height: 470,
   },
   sheet: {
     padding: 24,
-    paddingTop: 32,
+    paddingTop: 36,
     paddingBottom: 44,
   },
 });

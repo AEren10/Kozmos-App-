@@ -21,7 +21,7 @@ const TAB_GLYPHS: Record<string, string> = {
   profile: "⊕",
 };
 
-const BAR_HEIGHT = 78;
+const BAR_HEIGHT = 72;
 const INDICATOR_WIDTH = 32;
 
 /**
@@ -197,13 +197,13 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: "row",
     alignItems: "flex-start",
-    paddingTop: 10,
+    paddingTop: 8,
     paddingHorizontal: 4,
   },
   tab: {
     flex: 1,
     alignItems: "center",
-    gap: 4,
+    gap: 3,
   },
   label: {
     fontSize: 10,

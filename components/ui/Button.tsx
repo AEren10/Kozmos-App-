@@ -29,7 +29,8 @@ export function Button({
           height,
           borderRadius,
           overflow: "hidden",
-          opacity: disabled ? 0.5 : pressed ? 0.9 : 1,
+          opacity: disabled ? 0.5 : pressed ? 0.94 : 1,
+          transform: [{ scale: pressed ? 0.992 : 1 }],
         },
         isGradient ? (shadows.glowAccent as any) : undefined,
         style as any,
@@ -39,9 +40,15 @@ export function Button({
       {isGradient ? (
         <LinearGradient
           colors={gradients.cta as any}
-          start={{ x: 0, y: 0 }}
-          end={{ x: 1, y: 1 }}
-          style={{ flex: 1, alignItems: "center", justifyContent: "center" }}
+          start={{ x: 0, y: 0.5 }}
+          end={{ x: 1, y: 0.5 }}
+          style={{
+            flex: 1,
+            alignItems: "center",
+            justifyContent: "center",
+            borderWidth: 1,
+            borderColor: "rgba(255,255,255,0.16)",
+          }}
         >
           {loading ? (
             <ActivityIndicator color={palette.textInk} />
@@ -52,7 +59,7 @@ export function Button({
                 fontSize: 16,
                 fontFamily: fontFamilies.bodyBold,
                 fontWeight: "700",
-                letterSpacing: 0.3,
+                letterSpacing: 0.15,
               }}
             >
               {children}
@@ -63,11 +70,12 @@ export function Button({
         <View
           style={{
             flex: 1,
-            backgroundColor: variant === "secondary" ? palette.surfaceHi : "transparent",
+            backgroundColor: variant === "secondary" ? "rgba(255,255,255,0.06)" : "transparent",
             borderWidth: variant === "ghost" ? 1 : 0,
             borderColor: palette.border,
             alignItems: "center",
             justifyContent: "center",
+            borderRadius,
           }}
         >
           {loading ? (
