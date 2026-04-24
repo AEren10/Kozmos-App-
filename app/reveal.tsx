@@ -102,19 +102,19 @@ export default function Reveal() {
       label: "GÜNEŞ",
       accent: "#ffd77a",
       signKey: (profile?.sun_sign as keyof typeof ZODIAC) ?? "leo",
-      description: "yaratıcılık, sahne ve liderlik içinde",
+      description: "parasalda, adına ne istiyorsan elde etmek için",
     },
     {
       label: "AY",
       accent: "#b0dcff",
       signKey: (profile?.moon_sign as keyof typeof ZODIAC) ?? "pisces",
-      description: "rüyalar ve his dünyasında ev yapar",
+      description: "rüyalar ve iç dünyasında ne yapar",
     },
     {
       label: "YÜKSELEN",
       accent: "#c4a4ff",
       signKey: (profile?.rising_sign as keyof typeof ZODIAC) ?? "scorpio",
-      description: "yoğun, dönüştürücü bir yüzey",
+      description: "yoğun, dönüştürücü bir yılan",
     },
   ];
 

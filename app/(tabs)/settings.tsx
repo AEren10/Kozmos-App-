@@ -1,5 +1,6 @@
 import { View, Text, ScrollView, StyleSheet } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { LinearGradient } from "expo-linear-gradient";
 import { NebulaBg, Starfield } from "@/components/nebula";
 import { useAppSelector } from "@/store";
 import { ZODIAC, type ZodiacSign } from "@/constants/zodiac";
@@ -41,9 +42,14 @@ export default function SettingsTab() {
         <ScrollView contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
           <View style={styles.header}>
             <View style={styles.avatarWrap}>
-              <View style={styles.avatar}>
+              <LinearGradient
+                colors={["#ff9ad1", "#c4a4ff", "#8b5cf6"]}
+                start={{ x: 0, y: 0 }}
+                end={{ x: 1, y: 1 }}
+                style={styles.avatar}
+              >
                 <Text style={styles.avatarLetter}>{name.charAt(0)}</Text>
-              </View>
+              </LinearGradient>
             </View>
 
             <View style={{ flex: 1 }}>

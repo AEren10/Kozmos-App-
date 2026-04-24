@@ -35,7 +35,7 @@ export default function TodayTab() {
               </Text>
             </View>
             <Rotator duration={20000}>
-              <Orb size={42} floatAmplitude={6} colorsOverride={["#fffdfd", "#dcc8ff", "#8e60f2"]} />
+              <Orb size={56} floatAmplitude={8} colorsOverride={["#fff5ee", "#ffb580", "#e87040"]} />
             </Rotator>
           </View>
 

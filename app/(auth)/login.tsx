@@ -139,8 +139,8 @@ export default function Login() {
       </View>
 
       <FadeUp delay={100} style={styles.logoWrap}>
-        <Text style={styles.logo}>kozmos</Text>
-        <Text style={styles.tagline}>YILDIZLARIN REHBERLİĞİNDE</Text>
+        <Text style={styles.logo}>kozmosa hoş geldin.</Text>
+        <Text style={styles.tagline}>haritanı çıkarmak için önce seni tanıyalım</Text>
       </FadeUp>
 
       <LinearGradient
@@ -221,23 +221,22 @@ const styles = StyleSheet.create({
   },
   logo: {
     fontFamily: fonts.display,
-    fontSize: 42,
+    fontSize: 28,
     color: "#fff",
-    letterSpacing: -0.5,
-    textShadowColor: "rgba(196,170,255,0.8)",
+    letterSpacing: -0.3,
+    textShadowColor: "rgba(196,170,255,0.7)",
     textShadowOffset: { width: 0, height: 0 },
-    textShadowRadius: 20,
+    textShadowRadius: 18,
     textAlign: "center",
-    paddingHorizontal: 20,
+    paddingHorizontal: 24,
   },
   tagline: {
-    fontSize: 11,
-    fontFamily: fonts.mono,
-    color: "rgba(240,235,255,0.58)",
+    fontSize: 13,
+    fontFamily: fonts.displayReg,
+    color: "rgba(240,235,255,0.5)",
     marginTop: 8,
     textAlign: "center",
     paddingHorizontal: 30,
-    letterSpacing: 3,
   },
   sheetBg: {
     position: "absolute",
