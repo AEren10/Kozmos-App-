@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Kozmos · AI Astroloji</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,300..900&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Cormorant+Garamond:ital,wght@0,300..700;1,300..700&family=Space+Grotesk:wght@300..700&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+
+<style>
+  html,body{margin:0;padding:0;background:#141118;color:#eae7f0;font-family:'Inter',system-ui,sans-serif;}
+  *{box-sizing:border-box;}
+  /* hide dc scrollbars inside the device */
+  .ios-screen::-webkit-scrollbar{display:none;}
+  .ios-screen{scrollbar-width:none;}
+
+  @keyframes kz-float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-6px)} }
+  @keyframes kz-twinkle { 0%,100%{opacity:.2} 50%{opacity:1} }
+  @keyframes kz-pulse { 0%,100%{transform:scale(1);opacity:.6} 50%{transform:scale(1.08);opacity:1} }
+  @keyframes kz-rotate { from{transform:rotate(0)} to{transform:rotate(360deg)} }
+  @keyframes kz-rotate-rev { from{transform:rotate(0)} to{transform:rotate(-360deg)} }
+  @keyframes kz-shimmer {
+    0%{background-position:-200% 0}
+    100%{background-position:200% 0}
+  }
+  @keyframes kz-fade-up { from{opacity:0;transform:translateY(8px)} to{opacity:1;transform:translateY(0)} }
+  @keyframes kz-glow {
+    0%,100%{box-shadow:0 0 30px rgba(164,122,255,.3), inset 0 0 30px rgba(164,122,255,.15)}
+    50%{box-shadow:0 0 60px rgba(164,122,255,.55), inset 0 0 40px rgba(164,122,255,.3)}
+  }
+  @keyframes kz-orbit {
+    from{transform:rotate(0) translateX(var(--r)) rotate(0)}
+    to{transform:rotate(360deg) translateX(var(--r)) rotate(-360deg)}
+  }
+  .kz-anim-fade { animation: kz-fade-up .5s ease both; }
+</style>
+
+<script type="application/json" id="speaker-notes">[]</script>
+</head>
+<body>
+<div id="root"></div>
+
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+
+<script type="text/babel" src="components/ios-frame.jsx"></script>
+<script type="text/babel" src="components/design-canvas.jsx"></script>
+
+<script type="text/babel" src="src/primitives.jsx"></script>
+<script type="text/babel" src="src/theme-nebula.jsx"></script>
+<script type="text/babel" src="src/tweaks.jsx"></script>
+<script type="text/babel" src="src/screens-onboarding.jsx"></script>
+<script type="text/babel" src="src/screens-main.jsx"></script>
+<script type="text/babel" src="src/app.jsx"></script>
+</body>
+</html>

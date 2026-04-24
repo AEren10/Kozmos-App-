@@ -1,0 +1,223 @@
+{
+  "common": {
+    "continue": "Devam",
+    "back": "Geri",
+    "skip": "Atla",
+    "save": "Kaydet",
+    "cancel": "Vazgeç",
+    "loading": "Yükleniyor...",
+    "error": "Bir şey ters gitti",
+    "retry": "Tekrar dene",
+    "optional": "(isteğe bağlı)"
+  },
+  "errors": {
+    "saveFailed": "Profilin kaydedilemedi. Lütfen tekrar dene.",
+    "networkError": "Bağlantı hatası. İnternetini kontrol et.",
+    "notAuthenticated": "Oturumun sona erdi, lütfen tekrar giriş yap."
+  },
+  "auth": {
+    "login": "Giriş Yap",
+    "register": "Kaydol",
+    "email": "E-posta",
+    "password": "Şifre",
+    "emailPlaceholder": "sen@ornek.com",
+    "createAccount": "Hesap Oluştur",
+    "haveAccount": "Zaten üyeyim",
+    "noAccount": "Hesabın yok mu? Kaydol",
+    "logout": "Çıkış Yap",
+    "tagline": "Yıldızlar seni bekliyor."
+  },
+  "intro": {
+    "slide1": {
+      "title": "Kozmos'a hoş geldin",
+      "desc": "Yıldızlar doğduğun an seni izliyordu. Şimdi onların ne söylediğini dinle."
+    },
+    "slide2": {
+      "title": "Sadece Güneş değil",
+      "desc": "Ay burcun, yükselenin, gezegenlerin — tam hikayen seni bekliyor."
+    },
+    "slide3": {
+      "title": "Kalbinin mıknatısını keşfet",
+      "desc": "Partnerinin doğum verilerini gir, sinastri analizinle gerçek uyumu gör."
+    },
+    "slide4": {
+      "title": "Her sabah bir mesaj",
+      "desc": "Günün enerjisini yıldızlardan öğren. Kozmos seni hiç yalnız bırakmayacak."
+    },
+    "getStarted": "Başlayalım"
+  },
+  "onboarding": {
+    "step": "{{current}} / {{total}}",
+    "title": "Seni tanıyalım",
+    "subtitle": "Bir kez giriyorsun, yıldızlar konuşuyor.",
+    "nameTitle": "Adın ne?",
+    "name": "İsim",
+    "namePlaceholder": "Ahmet Eren",
+    "genderTitle": "Nasıl hitap edelim?",
+    "genderHelp": "Yorumlar sana uygun dille gelir.",
+    "birthDateTitle": "Doğum tarihin?",
+    "birthDate": "Tarih",
+    "birthTimeTitle": "Doğum saatin?",
+    "birthTimeHelp": "Saat, Ay ve Yükselen burcun için gerekli. Bilmiyorsan 'Bilmiyorum' dokun.",
+    "birthTime": "Saat",
+    "birthTimeUnknown": "Bilmiyorum",
+    "birthPlaceTitle": "Doğum yerin?",
+    "birthPlaceHelp": "Şehir yeterli. Gezegenlerin doğru hesaplanması için.",
+    "birthPlace": "Şehir",
+    "relationshipTitle": "İlişki durumun?",
+    "relationshipHelp": "Aşk yorumlarının tonunu belirler.",
+    "focusTitle": "Seni buraya ne getirdi?",
+    "focusHelp": "Birden fazla seçebilirsin.",
+    "questionTitle": "Kafanda dolaşan büyük bir soru var mı?",
+    "questionHelp": "Yazdığın kadarıyla yorumlar sana bağlanır. Atlayabilirsin.",
+    "questionPlaceholder": "Ör: Bu işin sonu nereye gidecek?",
+    "experienceTitle": "Astrolojiye ne kadar yakınsın?",
+    "toneTitle": "Hangi tonu seversin?",
+    "toneHelp": "Yorumlar sana şöyle gelsin:",
+    "notifyTitle": "Sabah kaçta hatırlatalım?",
+    "notifyHelp": "Günün burcu ve transitler için.",
+    "finish": "Haritamı Oluştur",
+    "creating": "Kozmos hazırlanıyor...",
+    "revealTitle": "İşte sen.",
+    "revealSubtitle": "Yıldızlar bunları söylüyor.",
+    "continue": "Devam",
+    "skipStep": "Atla"
+  },
+  "checkin": {
+    "title": "Bugün nasıl hissediyorsun?",
+    "moodTitle": "Ruh halin",
+    "energyTitle": "Enerji seviyen",
+    "topTitle": "Kafanı meşgul eden?",
+    "topPlaceholder": "Tek cümle, atlayabilirsin",
+    "save": "Burcumu Oku",
+    "skip": "Atla"
+  },
+  "reveal": {
+    "computing": "Kozmos hazırlanıyor",
+    "step1": "Doğum haritan çıkarılıyor...",
+    "step2": "Gezegenler diziliyor...",
+    "step3": "Kişisel yorumun hazırlanıyor...",
+    "continue": "Kozmosuma Gir"
+  },
+  "invite": {
+    "title": "Kozmos Uyum Davetin",
+    "subtitle": "{{name}} seninle uyum analizini paylaşmak istiyor.",
+    "partner": "Partnerin:",
+    "cta": "Uyuma Bak",
+    "signup": "Ücretsiz kaydol ve sonucunu gör"
+  },
+  "journal": {
+    "title": "Günlük",
+    "todayPrompt": "Bugün seni en çok ne etkiledi?",
+    "placeholder": "Yaz... yıldızlar dinliyor.",
+    "save": "Kaydet",
+    "history": "Geçmiş girişler"
+  },
+  "paywall": {
+    "title": "Kozmos Plus",
+    "subtitle": "Sınırsız sinastri, transit uyarıları, tam doğum haritası.",
+    "weekly": "Haftalık",
+    "yearly": "Yıllık",
+    "weeklyPrice": "₺49/hafta",
+    "yearlyPrice": "₺799/yıl",
+    "yearlyBadge": "%62 İNDİRİM",
+    "bestValue": "En iyi değer",
+    "features": {
+      "unlimited": "Sınırsız sinastri ve uyum analizi",
+      "pdf": "Detaylı PDF raporlar",
+      "transits": "Günlük gezegen geçişleri",
+      "chat": "AI astrolog sohbeti",
+      "dream": "Rüya yorumu",
+      "pastLife": "Geçmiş yaşam analizi",
+      "noAds": "Reklamsız deneyim"
+    },
+    "cta": "Plus'a Geç",
+    "continue": "Şimdilik atla",
+    "restore": "Satın alınanları geri yükle",
+    "terms": "Abonelik otomatik yenilenir. İstediğin zaman iptal edebilirsin."
+  },
+  "tabs": {
+    "today": "Bugün",
+    "natal": "Haritam",
+    "compat": "Uyum",
+    "tools": "Keşfet",
+    "profile": "Profil",
+    "settings": "Ayarlar"
+  },
+  "daily": {
+    "greeting": "Günün kozmosu",
+    "mood": "Ruh",
+    "love": "Aşk",
+    "career": "Kariyer",
+    "health": "Sağlık",
+    "tipTitle": "Bugünün İpucu",
+    "feedback": "Bu yorum için ne hissediyorsun?",
+    "share": "Paylaş"
+  },
+  "natal": {
+    "title": "Doğum Haritan",
+    "subtitle": "Yıldızların doğduğun an çektiği fotoğraf.",
+    "sun": "Güneş",
+    "moon": "Ay",
+    "rising": "Yükselen",
+    "needTime": "— doğum saati gerek",
+    "needTimeAndPlace": "— doğum saati ve yeri gerek",
+    "fullReport": "Tam Rapor (PDF) — ₺149"
+  },
+  "compat": {
+    "title": "İlişki Laboratuvarı",
+    "subtitle": "Uyumunuzu kozmos üzerinden hesapla.",
+    "partnerInfo": "Partnerin Bilgileri",
+    "partnerName": "İsim",
+    "partnerDate": "Doğum tarihi",
+    "compute": "Uyumu Hesapla",
+    "score": "Uyum Skoru",
+    "inviteLink": "Partnerine gönder",
+    "fullReport": "Tam Rapor (PDF) — ₺79"
+  },
+  "tools": {
+    "title": "Keşfet",
+    "subtitle": "Kozmos'un tüm araçları.",
+    "soon": "Yakında",
+    "numerology": { "title": "Numeroloji", "desc": "Yaşam yolu ve isim titreşimin." },
+    "nameCompat": { "title": "İsim Uyumu", "desc": "2 ismin enerjisi uyuyor mu?" },
+    "pastLife": { "title": "Geçmiş Yaşam", "desc": "Güney Ay Düğümü'nden hikayen." },
+    "tarot": { "title": "Tarot Çekimi", "desc": "Günün kartını çek." },
+    "dream": { "title": "Rüya Tabiri", "desc": "Gördüğünü yaz, sembollerini aç." },
+    "coffee": { "title": "Kahve Falı", "desc": "Fincan fotoğrafını yükle." }
+  },
+  "profile": {
+    "sunSign": "Güneş Burcun",
+    "birth": "Doğum",
+    "plus": {
+      "title": "Kozmos Plus",
+      "desc": "Sınırsız sinastri, PDF raporlar, transit uyarıları.",
+      "cta": "₺99/ay • Başlat"
+    }
+  },
+  "settings": {
+    "title": "Ayarlar",
+    "language": "Dil",
+    "theme": "Tema",
+    "notifications": "Bildirimler",
+    "dailyHoroscope": "Günlük burç hatırlatması",
+    "transitAlerts": "Transit uyarıları",
+    "account": "Hesap",
+    "upgradeToPlus": "Plus'a Geç",
+    "manageSubscription": "Aboneliği yönet",
+    "restorePurchases": "Satın alınanları geri yükle",
+    "resetOnboarding": "Onboarding'i sıfırla",
+    "deleteAccount": "Hesabı sil",
+    "disclaimer": "Eğlence amaçlıdır. Profesyonel tavsiye değildir.",
+    "themeOptions": { "dark": "Koyu", "light": "Açık", "system": "Sistem" },
+    "langOptions": { "tr": "Türkçe", "en": "English" }
+  },
+  "streak": {
+    "title": "Kozmos Serisi",
+    "day": "{{count}} gün",
+    "days": "{{count}} gün",
+    "lost": "Serini kaybettin. Bugün tekrar başla.",
+    "keepGoing": "Harika! Yıldızlar seninle."
+  },
+  "disclaimer": "Eğlence amaçlıdır. Profesyonel tavsiye değildir."
+}

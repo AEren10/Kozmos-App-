@@ -1,0 +1,20 @@
+{
+  "version": 1,
+  "skills": {
+    "supabase": {
+      "source": "supabase/agent-skills",
+      "sourceType": "github",
+      "computedHash": "cb675a889c60172febe84740e7c22b600c8241c390deaff3d368c408f10dffdf"
+    },
+    "supabase-postgres-best-practices": {
+      "source": "supabase/agent-skills",
+      "sourceType": "github",
+      "computedHash": "d606a1146be6d54fb9e73f718b5320b9acac5ff2ba2d7230a555df4b5a923b4a"
+    },
+    "zafer-skills": {
+      "source": "zaferayan/skills",
+      "sourceType": "github",
+      "computedHash": "5f92b45c646b654e90ca81606a515d78c5a49551eff298e1f8dc0f330463e3e6"
+    }
+  }
+}

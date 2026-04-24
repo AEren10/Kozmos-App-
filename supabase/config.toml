@@ -1,0 +1,5 @@
+# Supabase project config
+project_id = "kozmos"
+
+[functions.ai-complete]
+verify_jwt = true

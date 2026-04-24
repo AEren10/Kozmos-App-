@@ -1,0 +1,236 @@
+{
+  "common": {
+    "continue": "Continue",
+    "back": "Back",
+    "skip": "Skip",
+    "save": "Save",
+    "cancel": "Cancel",
+    "loading": "Loading...",
+    "error": "Something went wrong",
+    "retry": "Try again",
+    "optional": "(optional)"
+  },
+  "errors": {
+    "saveFailed": "Couldn't save your profile. Please try again.",
+    "networkError": "Connection error. Check your internet.",
+    "notAuthenticated": "Your session expired, please sign in again."
+  },
+  "auth": {
+    "login": "Sign In",
+    "register": "Sign Up",
+    "email": "Email",
+    "password": "Password",
+    "emailPlaceholder": "you@example.com",
+    "createAccount": "Create Account",
+    "haveAccount": "Already have an account",
+    "noAccount": "Don't have an account? Sign up",
+    "logout": "Log out",
+    "tagline": "The stars await you."
+  },
+  "intro": {
+    "slide1": {
+      "title": "Welcome to Kozmos",
+      "desc": "The stars were watching when you were born. Now listen to what they say."
+    },
+    "slide2": {
+      "title": "More than your Sun sign",
+      "desc": "Your Moon, Rising, planets — your full story is waiting."
+    },
+    "slide3": {
+      "title": "Discover your magnet",
+      "desc": "Enter your partner's birth details, see real compatibility through synastry."
+    },
+    "slide4": {
+      "title": "A message every morning",
+      "desc": "Get the day's energy from the stars. Kozmos will never leave you alone."
+    },
+    "getStarted": "Let's begin"
+  },
+  "onboarding": {
+    "step": "{{current}} / {{total}}",
+    "title": "Let's get to know you",
+    "subtitle": "Enter once, the stars will speak.",
+    "nameTitle": "What's your name?",
+    "name": "Name",
+    "namePlaceholder": "Alex Smith",
+    "genderTitle": "How should we address you?",
+    "genderHelp": "Readings will match your language.",
+    "birthDateTitle": "Your birth date?",
+    "birthDate": "Date",
+    "birthTimeTitle": "Your birth time?",
+    "birthTimeHelp": "Time is needed for Moon and Rising. Tap \"I don't know\" for approximate readings.",
+    "birthTime": "Time",
+    "birthTimeUnknown": "I don't know",
+    "birthPlaceTitle": "Your birth place?",
+    "birthPlaceHelp": "City is enough. For accurate planet calculations.",
+    "birthPlace": "City",
+    "relationshipTitle": "Relationship status?",
+    "relationshipHelp": "Shapes the tone of love readings.",
+    "focusTitle": "What brings you here?",
+    "focusHelp": "Pick all that apply.",
+    "questionTitle": "Any big question on your mind?",
+    "questionHelp": "Readings tune to this. You can skip.",
+    "questionPlaceholder": "e.g., Where is this going?",
+    "experienceTitle": "How close are you to astrology?",
+    "toneTitle": "What tone do you like?",
+    "toneHelp": "Let readings feel:",
+    "notifyTitle": "Morning reminder time?",
+    "notifyHelp": "For your daily horoscope and transits.",
+    "finish": "Create My Chart",
+    "creating": "Preparing your cosmos...",
+    "revealTitle": "Here you are.",
+    "revealSubtitle": "This is what the stars say.",
+    "continue": "Continue",
+    "skipStep": "Skip"
+  },
+  "checkin": {
+    "title": "How are you feeling today?",
+    "moodTitle": "Mood",
+    "energyTitle": "Energy level",
+    "topTitle": "On your mind?",
+    "topPlaceholder": "One line, you can skip",
+    "save": "Read My Stars",
+    "skip": "Skip"
+  },
+  "reveal": {
+    "computing": "Preparing your cosmos",
+    "step1": "Pulling your birth chart...",
+    "step2": "Aligning the planets...",
+    "step3": "Crafting your reading...",
+    "continue": "Enter My Cosmos"
+  },
+  "invite": {
+    "title": "Your Kozmos Invite",
+    "subtitle": "{{name}} wants to share a compatibility reading with you.",
+    "partner": "Your partner:",
+    "cta": "See Compatibility",
+    "signup": "Sign up free and see your result"
+  },
+  "achievements": {
+    "title": "Achievements",
+    "first_daily": "First Daily Read",
+    "streak_3": "3-Day Streak",
+    "streak_7": "Cosmic Week",
+    "streak_30": "Moon Cycle",
+    "streak_100": "Star Warrior",
+    "first_synastry": "First Synastry",
+    "first_natal": "Chart Unveiled",
+    "first_partner": "Heart Bond",
+    "journal_7": "A Week of Reflection",
+    "deep_reader": "Deep Reader"
+  },
+  "journal": {
+    "title": "Journal",
+    "todayPrompt": "What stirred you most today?",
+    "placeholder": "Write... the stars are listening.",
+    "save": "Save",
+    "history": "Past entries"
+  },
+  "paywall": {
+    "title": "Kozmos Plus",
+    "subtitle": "Unlimited synastry, transit alerts, full birth chart.",
+    "weekly": "Weekly",
+    "yearly": "Yearly",
+    "weeklyPrice": "$4.99/week",
+    "yearlyPrice": "$59.99/year",
+    "yearlyBadge": "70% OFF",
+    "bestValue": "Best value",
+    "features": {
+      "unlimited": "Unlimited synastry and compatibility",
+      "pdf": "Detailed PDF reports",
+      "transits": "Daily planetary transits",
+      "chat": "AI astrologer chat",
+      "dream": "Dream interpretation",
+      "pastLife": "Past life analysis",
+      "noAds": "Ad-free experience"
+    },
+    "cta": "Go Plus",
+    "continue": "Not now",
+    "restore": "Restore purchases",
+    "terms": "Subscription auto-renews. Cancel anytime."
+  },
+  "tabs": {
+    "today": "Today",
+    "natal": "Chart",
+    "compat": "Compat",
+    "tools": "Explore",
+    "profile": "Profile",
+    "settings": "Settings"
+  },
+  "daily": {
+    "greeting": "Today's cosmos",
+    "mood": "Mood",
+    "love": "Love",
+    "career": "Career",
+    "health": "Health",
+    "tipTitle": "Today's Tip",
+    "feedback": "How did this feel?",
+    "share": "Share"
+  },
+  "natal": {
+    "title": "Your Birth Chart",
+    "subtitle": "The sky's photo at the moment you were born.",
+    "sun": "Sun",
+    "moon": "Moon",
+    "rising": "Rising",
+    "needTime": "— birth time needed",
+    "needTimeAndPlace": "— birth time and place needed",
+    "fullReport": "Full Report (PDF) — $9.99"
+  },
+  "compat": {
+    "title": "Relationship Lab",
+    "subtitle": "Compute your compatibility through the cosmos.",
+    "partnerInfo": "Partner Info",
+    "partnerName": "Name",
+    "partnerDate": "Birth date",
+    "compute": "Compute Compatibility",
+    "score": "Compatibility Score",
+    "inviteLink": "Send to your partner",
+    "fullReport": "Full Report (PDF) — $4.99"
+  },
+  "tools": {
+    "title": "Explore",
+    "subtitle": "All Kozmos tools.",
+    "soon": "Soon",
+    "numerology": { "title": "Numerology", "desc": "Life path and name vibration." },
+    "nameCompat": { "title": "Name Match", "desc": "Do 2 names resonate?" },
+    "pastLife": { "title": "Past Life", "desc": "Your story from the South Node." },
+    "tarot": { "title": "Tarot Draw", "desc": "Pull today's card." },
+    "dream": { "title": "Dream Reading", "desc": "Describe your dream, unlock symbols." },
+    "coffee": { "title": "Coffee Reading", "desc": "Upload your cup photo." }
+  },
+  "profile": {
+    "sunSign": "Your Sun Sign",
+    "birth": "Birth",
+    "plus": {
+      "title": "Kozmos Plus",
+      "desc": "Unlimited synastry, PDF reports, transit alerts.",
+      "cta": "$9.99/mo • Start"
+    }
+  },
+  "settings": {
+    "title": "Settings",
+    "language": "Language",
+    "theme": "Theme",
+    "notifications": "Notifications",
+    "dailyHoroscope": "Daily horoscope reminder",
+    "transitAlerts": "Transit alerts",
+    "account": "Account",
+    "upgradeToPlus": "Upgrade to Plus",
+    "manageSubscription": "Manage subscription",
+    "restorePurchases": "Restore purchases",
+    "resetOnboarding": "Reset onboarding",
+    "deleteAccount": "Delete account",
+    "disclaimer": "For entertainment only. Not professional advice.",
+    "themeOptions": { "dark": "Dark", "light": "Light", "system": "System" },
+    "langOptions": { "tr": "Türkçe", "en": "English" }
+  },
+  "streak": {
+    "title": "Cosmic Streak",
+    "day": "{{count}} day",
+    "days": "{{count}} days",
+    "lost": "You broke your streak. Start again today.",
+    "keepGoing": "Great! The stars are with you."
+  },
+  "disclaimer": "For entertainment only. Not professional advice."
+}

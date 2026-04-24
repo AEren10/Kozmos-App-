@@ -1,30 +1,60 @@
 {
   "expo": {
-    "name": "kozmos-app",
+    "name": "Kozmos",
     "slug": "kozmos-app",
+    "scheme": "kozmos",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
-    "userInterfaceStyle": "light",
+    "userInterfaceStyle": "dark",
     "newArchEnabled": true,
     "splash": {
       "image": "./assets/splash-icon.png",
       "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
+      "backgroundColor": "#0B0B1A"
     },
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.kozmos.app",
+      "buildNumber": "1"
     },
     "android": {
+      "package": "com.kozmos.app",
+      "versionCode": 1,
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
-        "backgroundColor": "#ffffff"
+        "backgroundColor": "#0B0B1A"
       },
       "edgeToEdgeEnabled": true,
       "predictiveBackGestureEnabled": false
     },
     "web": {
-      "favicon": "./assets/favicon.png"
+      "favicon": "./assets/favicon.png",
+      "bundler": "metro"
+    },
+    "plugins": [
+      "expo-router",
+      "expo-secure-store",
+      [
+        "expo-notifications",
+        {
+          "icon": "./assets/icon.png",
+          "color": "#C8A4FF"
+        }
+      ],
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "Kozmos, fal yorumlamak için fotoğraf seçmene izin ister."
+        }
+      ],
+      "expo-video",
+      "expo-localization",
+      "@react-native-community/datetimepicker",
+      "expo-font"
+    ],
+    "extra": {
+      "router": {}
     }
   }
 }
