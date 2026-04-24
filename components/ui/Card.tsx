@@ -1,16 +1,16 @@
 import { View, type ViewProps } from "react-native";
-import { colors, radii } from "@/constants/theme";
+import { palette, radii } from "@/constants/designTokens";
 
 export function Card({ style, ...rest }: ViewProps) {
   return (
     <View
       style={[
         {
-          backgroundColor: colors.bgCard,
+          backgroundColor: palette.surfaceGlass,
           borderRadius: radii.lg,
           padding: 16,
           borderWidth: 1,
-          borderColor: colors.border,
+          borderColor: palette.border,
         },
         style as any,
       ]}

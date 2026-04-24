@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>FlashcardMobile — Premium Dark</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet"/>
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+<script type="text/babel" src="ios-frame.jsx"></script>
+<script type="text/babel" src="design-canvas.jsx"></script>
+<script type="text/babel" src="app-screens.jsx"></script>
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { background:#f0eee9; font-family:'Space Grotesk',sans-serif; }
+  @keyframes bounceIn { 0%{transform:scale(0.3);opacity:0} 50%{transform:scale(1.08)} 70%{transform:scale(0.95)} 100%{transform:scale(1);opacity:1} }
+  @keyframes fadeUp { 0%{transform:translateY(12px);opacity:0} 100%{transform:translateY(0);opacity:1} }
+  @keyframes slideUp { 0%{transform:translateY(100%);opacity:0} 100%{transform:translateY(0);opacity:1} }
+  @keyframes float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-4px)} }
+  @keyframes pulse { 0%,100%{opacity:0.6} 50%{opacity:1} }
+</style>
+<script>
+const TWEAK_DEFAULTS = /*EDITMODE-BEGIN*/{
+  "accentColor": "#B4FF4F"
+}/*EDITMODE-END*/;
+</script>
+</head>
+<body>
+<div id="root"></div>
+<script type="text/babel">
+
+function FlashcardApp({ screenOverride }) {
+  const [screen, setScreen] = React.useState(screenOverride || 'home');
+
+  return (
+    <IOSDevice width={393} height={852}>
+      <div style={{ height:'100%', position:'relative' }}>
+        {screen === 'home' && <HomeScreen onNav={setScreen}/>}
+        {screen === 'study' && <StudyScreen onNav={setScreen}/>}
+        {screen === 'create' && <CreateListScreen onNav={setScreen}/>}
+        <BottomNav active={screen === 'study' ? 'lists' : screen === 'create' ? 'lists' : 'home'} onNav={(id) => {
+          if (id === 'home') setScreen('home');
+          else if (id === 'lists') setScreen('create');
+        }}/>
+      </div>
+    </IOSDevice>
+  );
+}
+
+function App() {
+  return (
+    <DesignCanvas>
+      <DCSection id="home" title="FlashcardMobile — Premium Dark" subtitle="Deep Navy + Lime Green · Etkileşimli · 3 Ekran">
+        <DCArtboard id="home" label="Home Screen" width={393} height={852}>
+          <FlashcardApp screenOverride="home"/>
+        </DCArtboard>
+        <DCArtboard id="study" label="Flashcard Study" width={393} height={852}>
+          <FlashcardApp screenOverride="study"/>
+        </DCArtboard>
+        <DCArtboard id="create" label="Liste Oluştur" width={393} height={852}>
+          <FlashcardApp screenOverride="create"/>
+        </DCArtboard>
+      </DCSection>
+    </DesignCanvas>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App/>);
+</script>
+</body>
+</html>

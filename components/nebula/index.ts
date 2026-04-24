@@ -1,4 +1,4 @@
-export { Starfield } from "./Starfield";
+export { Starfield, StarField } from "./Starfield";
 export { NebulaBg } from "./NebulaBg";
 export { Orb, OrbitRing } from "./Orb";
 export { OrbitRings, Rotator } from "./OrbitRings";
@@ -8,3 +8,6 @@ export { NatalChart } from "./NatalChart";
 export { TypingDots } from "./TypingDots";
 export { FadeUp } from "./FadeUp";
 export { OrbitingDot } from "./OrbitingDot";
+export { GlowHalo } from "./GlowHalo";
+export { ShimmerText } from "./ShimmerText";
+export { GradientText } from "./GradientText";

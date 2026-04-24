@@ -1,7 +1,10 @@
 import * as Notifications from "expo-notifications";
 import * as Device from "expo-device";
+import Constants, { ExecutionEnvironment } from "expo-constants";
 import { Platform } from "react-native";
 import { supabase, isSupabaseConfigured } from "@/lib/supabase";
+
+const isExpoGo = Constants.executionEnvironment === ExecutionEnvironment.StoreClient;
 
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
@@ -24,6 +27,7 @@ export async function requestPushPermission(): Promise<boolean> {
 }
 
 export async function registerForPush(userId: string): Promise<string | null> {
+  if (isExpoGo) return null; // Expo Go SDK 53+ remote push desteklenmiyor
   const granted = await requestPushPermission();
   if (!granted) return null;
 

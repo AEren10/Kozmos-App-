@@ -1,10 +1,11 @@
-import { useEffect, useRef, useState } from "react";
-import { View, Text, ScrollView, StyleSheet, ActivityIndicator, Animated, Easing, Pressable } from "react-native";
+import { useEffect, useState } from "react";
+import { View, Text, ScrollView, StyleSheet, ActivityIndicator, Pressable } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useQuery } from "@tanstack/react-query";
 import { format } from "date-fns";
 import { useTranslation } from "react-i18next";
-import { NebulaBg, Orb, Rotator, OrbitRings, GlassCard, FadeUp } from "@/components/nebula";
+import { NebulaBg, Orb, Rotator, GlassCard, FadeUp, ShimmerText } from "@/components/nebula";
+import { GradientBar } from "@/components/ui/GradientBar";
 import { FeedbackBar } from "@/components/ui/FeedbackBar";
 import { CheckinSheet } from "@/components/features/CheckinSheet";
 import { useAppDispatch, useAppSelector } from "@/store";
@@ -16,28 +17,16 @@ import { shareHoroscope } from "@/lib/share";
 import { ZODIAC } from "@/constants/zodiac";
 import { colors, fonts } from "@/constants/theme";
 
-function Meter({ label, value, color, delay = 0 }: { label: string; value: number; color: string; delay?: number }) {
-  const width = useRef(new Animated.Value(0)).current;
-  useEffect(() => {
-    Animated.timing(width, { toValue: value, duration: 900, delay, easing: Easing.out(Easing.cubic), useNativeDriver: false }).start();
-  }, [delay, value, width]);
-
+function Meter({
+  label, value, gradient, delay = 0, swatch,
+}: { label: string; value: number; gradient: readonly [string, string]; delay?: number; swatch: string }) {
   return (
     <View style={{ marginBottom: 12 }}>
       <View style={{ flexDirection: "row", justifyContent: "space-between", marginBottom: 6 }}>
         <Text style={{ fontSize: 12, color: colors.textDim }}>{label}</Text>
-        <Text style={{ fontSize: 12, color, fontFamily: fonts.mono }}>{value}%</Text>
+        <Text style={{ fontSize: 12, color: swatch, fontFamily: fonts.mono }}>{value}%</Text>
       </View>
-      <View style={{ height: 6, borderRadius: 3, backgroundColor: "rgba(255,255,255,0.07)", overflow: "hidden" }}>
-        <Animated.View
-          style={{
-            height: "100%",
-            borderRadius: 3,
-            backgroundColor: color,
-            width: width.interpolate({ inputRange: [0, 100], outputRange: ["0%", "100%"] }),
-          }}
-        />
-      </View>
+      <GradientBar value={value} colors={gradient} delay={delay} height={8} />
     </View>
   );
 }
@@ -90,10 +79,13 @@ export default function DailyTab() {
               <Text style={{ fontSize: 12, color: colors.accent, fontFamily: fonts.mono, letterSpacing: 2, marginBottom: 3 }}>
                 {dateStr}
               </Text>
-              <Text style={{ fontFamily: fonts.display, fontSize: 26, color: colors.text }}>
-                iyi günler,{" "}
-                <Text style={{ color: colors.accent }}>{profile?.display_name ?? "Gezgin"}.</Text>
-              </Text>
+              <View style={{ flexDirection: "row", alignItems: "center" }}>
+                <Text style={{ fontFamily: fonts.display, fontSize: 26, color: colors.text }}>iyi günler, </Text>
+                <ShimmerText
+                  style={{ fontFamily: fonts.display, fontSize: 26 }}
+                  width={160}
+                >{`${profile?.display_name ?? "Gezgin"}.`}</ShimmerText>
+              </View>
             </View>
             <Rotator duration={20000}>
               <Orb size={44} />
@@ -105,9 +97,9 @@ export default function DailyTab() {
               <Text style={{ fontSize: 10, color: colors.accent, fontFamily: fonts.mono, letterSpacing: 2, marginBottom: 12 }}>
                 GÜNLÜK ENERJİ
               </Text>
-              <Meter label="Aşk" value={78} color="#ff9ad1" delay={100} />
-              <Meter label="İş" value={55} color="#c4a4ff" delay={250} />
-              <Meter label="Yaratıcılık" value={91} color="#ffd77a" delay={400} />
+              <Meter label="Aşk" value={78} gradient={["#ff6b9d", "#ff9ad1"]} swatch="#ff9ad1" delay={100} />
+              <Meter label="İş" value={55} gradient={["#8b5cf6", "#c4a4ff"]} swatch="#c4a4ff" delay={250} />
+              <Meter label="Yaratıcılık" value={91} gradient={["#ffb347", "#ffd77a"]} swatch="#ffd77a" delay={400} />
             </GlassCard>
           </FadeUp>
 
@@ -141,6 +133,34 @@ export default function DailyTab() {
               <FeedbackBar contentHash={`daily:${today}:${sign}`} feature="daily" />
             </View>
           )}
+
+          <View style={{ paddingHorizontal: 18, marginTop: 6 }}>
+            <Text style={{ fontSize: 10, color: colors.accent, fontFamily: fonts.mono, letterSpacing: 2, marginBottom: 10, paddingLeft: 2 }}>
+              AKTİF TRANSİTLER
+            </Text>
+            <View style={{
+              flexDirection: "row", alignItems: "center", gap: 12,
+              padding: 14, borderRadius: 18,
+              backgroundColor: "rgba(255,255,255,0.04)",
+              borderWidth: 1, borderColor: "rgba(196,170,255,0.15)",
+            }}>
+              <View style={{
+                width: 36, height: 36, borderRadius: 18,
+                backgroundColor: "#b0dcff",
+                alignItems: "center", justifyContent: "center",
+              }}>
+                <Text style={{ fontSize: 18, color: "#1a0e3d" }}>☾</Text>
+              </View>
+              <View style={{ flex: 1 }}>
+                <Text style={{ fontFamily: fonts.displayReg, fontSize: 15, color: colors.text }}>
+                  Balık → Koç
+                </Text>
+                <Text style={{ fontSize: 11, color: colors.textMute, fontFamily: fonts.mono, letterSpacing: 1, marginTop: 2 }}>
+                  bugün 22:14
+                </Text>
+              </View>
+            </View>
+          </View>
         </ScrollView>
 
         <CheckinSheet open={checkinOpen} onClose={() => setCheckinOpen(false)} onSave={onCheckinSave} />

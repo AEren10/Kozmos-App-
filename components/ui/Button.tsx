@@ -1,8 +1,8 @@
 import { Pressable, ActivityIndicator, Text, View, type PressableProps } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
-import { colors, radii, gradients } from "@/constants/theme";
+import { palette, radii, gradients, shadows, fontFamilies } from "@/constants/designTokens";
 
-type Variant = "primary" | "secondary" | "ghost";
+type Variant = "primary" | "secondary" | "ghost" | "pill";
 
 export function Button({
   children,
@@ -17,55 +17,71 @@ export function Button({
   variant?: Variant;
   loading?: boolean;
 }) {
-  const isPrimary = variant === "primary";
+  const isGradient = variant === "primary" || variant === "pill";
+  const height = variant === "pill" ? 56 : 54;
+  const borderRadius = variant === "pill" ? radii.pill : 27;
 
   return (
     <Pressable
       onPress={loading || disabled ? undefined : onPress}
       style={({ pressed }) => [
         {
-          height: 54,
-          borderRadius: radii.xxl,
+          height,
+          borderRadius,
           overflow: "hidden",
           opacity: disabled ? 0.5 : pressed ? 0.9 : 1,
-          shadowColor: "#8b5cf6",
-          shadowOffset: { width: 0, height: 10 },
-          shadowOpacity: isPrimary ? 0.5 : 0,
-          shadowRadius: 30,
-          elevation: isPrimary ? 10 : 0,
         },
+        isGradient ? (shadows.glowAccent as any) : undefined,
         style as any,
       ]}
       {...rest}
     >
-      {isPrimary ? (
+      {isGradient ? (
         <LinearGradient
-          colors={["#c4a4ff", "#8b5cf6"]}
+          colors={gradients.cta as any}
           start={{ x: 0, y: 0 }}
           end={{ x: 1, y: 1 }}
           style={{ flex: 1, alignItems: "center", justifyContent: "center" }}
         >
           {loading ? (
-            <ActivityIndicator color={colors.bgDeep} />
+            <ActivityIndicator color={palette.textInk} />
           ) : (
-            <Text style={{ color: colors.bgDeep, fontSize: 16, fontWeight: "700", letterSpacing: 0.3 }}>{children}</Text>
+            <Text
+              style={{
+                color: palette.textInk,
+                fontSize: 16,
+                fontFamily: fontFamilies.bodyBold,
+                fontWeight: "700",
+                letterSpacing: 0.3,
+              }}
+            >
+              {children}
+            </Text>
           )}
         </LinearGradient>
       ) : (
         <View
           style={{
             flex: 1,
-            backgroundColor: variant === "secondary" ? colors.surfaceHi : "transparent",
+            backgroundColor: variant === "secondary" ? palette.surfaceHi : "transparent",
             borderWidth: variant === "ghost" ? 1 : 0,
-            borderColor: colors.border,
+            borderColor: palette.border,
             alignItems: "center",
             justifyContent: "center",
           }}
         >
           {loading ? (
-            <ActivityIndicator color={colors.text} />
+            <ActivityIndicator color={palette.text} />
           ) : (
-            <Text style={{ color: colors.text, fontSize: 15, fontWeight: "500" }}>{children}</Text>
+            <Text
+              style={{
+                color: palette.text,
+                fontSize: 15,
+                fontFamily: fontFamilies.bodyMed,
+              }}
+            >
+              {children}
+            </Text>
           )}
         </View>
       )}

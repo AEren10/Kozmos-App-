@@ -1,6 +1,12 @@
+import { useEffect } from "react";
 import Svg, { Circle } from "react-native-svg";
-import { useEffect, useRef } from "react";
-import { Animated, Easing, View } from "react-native";
+import Animated, {
+  useSharedValue,
+  useAnimatedStyle,
+  withRepeat,
+  withTiming,
+  Easing,
+} from "react-native-reanimated";
 
 export function OrbitRings({
   size = 200,
@@ -33,7 +39,7 @@ export function OrbitRings({
 }
 
 /**
- * Rotating wrapper — OrbitRings içinde sürekli döner
+ * kz-rotate — continuous rotator wrapper (Reanimated 3 worklet).
  */
 export function Rotator({
   duration = 20000,
@@ -44,25 +50,19 @@ export function Rotator({
   reverse?: boolean;
   children: React.ReactNode;
 }) {
-  const rotate = useRef(new Animated.Value(0)).current;
+  const t = useSharedValue(0);
 
   useEffect(() => {
-    Animated.loop(
-      Animated.timing(rotate, {
-        toValue: 1,
-        duration,
-        easing: Easing.linear,
-        useNativeDriver: true,
-      }),
-    ).start();
-  }, [duration, rotate]);
+    t.value = withRepeat(
+      withTiming(1, { duration, easing: Easing.linear }),
+      -1,
+      false,
+    );
+  }, [duration, t]);
 
-  const spin = rotate.interpolate({
-    inputRange: [0, 1],
-    outputRange: reverse ? ["0deg", "-360deg"] : ["0deg", "360deg"],
-  });
+  const style = useAnimatedStyle(() => ({
+    transform: [{ rotate: `${(reverse ? -1 : 1) * t.value * 360}deg` }],
+  }));
 
-  return (
-    <Animated.View style={{ transform: [{ rotate: spin }] }}>{children}</Animated.View>
-  );
+  return <Animated.View style={style}>{children}</Animated.View>;
 }

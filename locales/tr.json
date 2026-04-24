@@ -8,7 +8,8 @@
     "loading": "Yükleniyor...",
     "error": "Bir şey ters gitti",
     "retry": "Tekrar dene",
-    "optional": "(isteğe bağlı)"
+    "optional": "(isteğe bağlı)",
+    "comingSoon": "Yakında"
   },
   "errors": {
     "saveFailed": "Profilin kaydedilemedi. Lütfen tekrar dene.",
@@ -25,7 +26,16 @@
     "haveAccount": "Zaten üyeyim",
     "noAccount": "Hesabın yok mu? Kaydol",
     "logout": "Çıkış Yap",
-    "tagline": "Yıldızlar seni bekliyor."
+    "tagline": "Yıldızlar seni bekliyor.",
+    "appleIosOnly": "Apple ile giriş yalnızca iOS'ta çalışır.",
+    "appleUnavailable": "Apple ile giriş bu cihazda kullanılamıyor.",
+    "appleFailed": "Apple ile giriş başarısız oldu.",
+    "googleSoon": "Google ile giriş yakında",
+    "forgotPassword": "şifremi unuttum →",
+    "forgotPrompt": "Şifre sıfırlama e-postası almak için e-postanı gir",
+    "forgotEmailMissing": "Önce e-posta alanını doldur",
+    "forgotSent": "Şifre sıfırlama e-postası gönderildi",
+    "forgotFailed": "E-posta gönderilemedi"
   },
   "intro": {
     "slide1": {
@@ -134,7 +144,12 @@
     "cta": "Plus'a Geç",
     "continue": "Şimdilik atla",
     "restore": "Satın alınanları geri yükle",
-    "terms": "Abonelik otomatik yenilenir. İstediğin zaman iptal edebilirsin."
+    "restoreSoon": "Geri yükleme yakında aktif olacak",
+    "restoreSuccess": "Satın alımların geri yüklendi",
+    "purchaseSuccess": "Kozmos Pro aktif ✦",
+    "terms": "Kullanım Şartları",
+    "privacy": "Gizlilik Politikası",
+    "autoRenewDisclaimer": "Abonelik, mevcut dönem bitmeden en az 24 saat önce iptal edilmezse otomatik yenilenir. Ücret, iTunes/Play hesabından tahsil edilir. İstediğin zaman hesap ayarlarından iptal edebilirsin."
   },
   "tabs": {
     "today": "Bugün",
@@ -160,6 +175,9 @@
     "sun": "Güneş",
     "moon": "Ay",
     "rising": "Yükselen",
+    "mercury": "Merkür",
+    "venus": "Venüs",
+    "mars": "Mars",
     "needTime": "— doğum saati gerek",
     "needTimeAndPlace": "— doğum saati ve yeri gerek",
     "fullReport": "Tam Rapor (PDF) — ₺149"
@@ -208,6 +226,11 @@
     "restorePurchases": "Satın alınanları geri yükle",
     "resetOnboarding": "Onboarding'i sıfırla",
     "deleteAccount": "Hesabı sil",
+    "deleteAccountConfirm": "Hesabını ve tüm verilerini kalıcı olarak sileceğiz. Bu işlem geri alınamaz.",
+    "deleteAccountDone": "Hesabın silindi.",
+    "privacyPolicy": "Gizlilik Politikası",
+    "termsOfService": "Kullanım Şartları",
+    "version": "Sürüm",
     "disclaimer": "Eğlence amaçlıdır. Profesyonel tavsiye değildir.",
     "themeOptions": { "dark": "Koyu", "light": "Açık", "system": "Sistem" },
     "langOptions": { "tr": "Türkçe", "en": "English" }

@@ -1,6 +1,6 @@
 import { ScrollView, View, type ViewProps } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { colors } from "@/constants/theme";
+import { palette } from "@/constants/designTokens";
 
 export function Screen({
   children,
@@ -15,7 +15,7 @@ export function Screen({
     </View>
   );
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: colors.bg }} edges={["top", "bottom"]}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: palette.bg }} edges={["top", "bottom"]}>
       {scroll ? <ScrollView contentContainerStyle={{ flexGrow: 1 }}>{content}</ScrollView> : content}
     </SafeAreaView>
   );

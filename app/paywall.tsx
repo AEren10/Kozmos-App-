@@ -1,21 +1,31 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { View, Text, Pressable, StyleSheet, StatusBar, ScrollView } from "react-native";
+import Animated, { useSharedValue, useAnimatedStyle, withRepeat, withSequence, withTiming } from "react-native-reanimated";
+import { LinearGradient } from "expo-linear-gradient";
 import { useRouter } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useTranslation } from "react-i18next";
-import { NebulaBg, OrbitRings, Rotator, FadeUp } from "@/components/nebula";
+import { NebulaBg, OrbitRings, Rotator, FadeUp, Starfield } from "@/components/nebula";
 import { Button } from "@/components/ui/Button";
+import { PlanCard } from "@/components/paywall/PlanCard";
+import { FeatureList, type Feature } from "@/components/paywall/FeatureList";
+import { PaywallFooter } from "@/components/paywall/PaywallFooter";
+import { purchasePlan, restorePurchases, isPurchasesConfigured } from "@/lib/purchases";
 import { useAppDispatch } from "@/store";
 import { setPaywallSeen } from "@/store/slices/streakSlice";
 import { toast } from "@/store/slices/uiSlice";
 import { colors, fonts } from "@/constants/theme";
+import { gradients } from "@/constants/designTokens";
 
-const FEATURES = [
+const FEATURES: Feature[] = [
   { icon: "♃", label: "Sınırsız soru", desc: "yıldızlara istediğin kadar sor" },
   { icon: "☿", label: "Retrograd uyarıları", desc: "günlük transit bildirimleri" },
   { icon: "♀", label: "Derin sinastri", desc: "birebir uyumluluk analizi" },
   { icon: "☽", label: "Rüya günlüğü", desc: "ay ile ilişkilendirilmiş notlar" },
 ];
+
+const PRIVACY_URL = "https://kozmos.app/privacy";
+const TERMS_URL = "https://kozmos.app/terms";
 
 type Plan = "yearly" | "monthly";
 
@@ -24,21 +34,78 @@ export default function Paywall() {
   const dispatch = useAppDispatch();
   const { t } = useTranslation();
   const [plan, setPlan] = useState<Plan>("yearly");
+  const [purchasing, setPurchasing] = useState(false);
+  const [restoring, setRestoring] = useState(false);
+
+  const glow = useSharedValue(0.3);
+  useEffect(() => {
+    glow.value = withRepeat(
+      withSequence(withTiming(0.7, { duration: 1500 }), withTiming(0.3, { duration: 1500 })),
+      -1,
+      false,
+    );
+  }, [glow]);
+  const ctaGlowStyle = useAnimatedStyle(() => ({ shadowOpacity: glow.value }));
 
   const close = () => {
     dispatch(setPaywallSeen(true));
-    router.replace("/(tabs)" as any);
+    router.replace("/(tabs)" as never);
   };
 
-  const purchase = () => {
-    dispatch(toast({ text: "Ödeme yakında (RevenueCat)", type: "info" }));
-    close();
+  const onPurchase = async () => {
+    if (purchasing) return;
+    if (!isPurchasesConfigured()) {
+      dispatch(toast({ text: "Ödeme yakında (RevenueCat)", type: "info" }));
+      close();
+      return;
+    }
+    setPurchasing(true);
+    try {
+      await purchasePlan(plan);
+      dispatch(toast({ text: t("paywall.purchaseSuccess"), type: "success" }));
+      close();
+    } catch (e) {
+      const err = e as { userCancelled?: boolean; message?: string };
+      if (err?.userCancelled) return;
+      dispatch(toast({ text: err?.message ?? t("errors.networkError"), type: "error" }));
+    } finally {
+      setPurchasing(false);
+    }
   };
+
+  const onRestore = async () => {
+    if (restoring) return;
+    setRestoring(true);
+    try {
+      if (!isPurchasesConfigured()) {
+        dispatch(toast({ text: t("paywall.restoreSoon"), type: "info" }));
+        return;
+      }
+      await restorePurchases();
+      dispatch(toast({ text: t("paywall.restoreSuccess"), type: "success" }));
+    } catch (e) {
+      const msg = e instanceof Error ? e.message : t("errors.networkError");
+      dispatch(toast({ text: msg, type: "error" }));
+    } finally {
+      setRestoring(false);
+    }
+  };
+
+  const trialNote = `7 gün ücretsiz deneme · sonra ${plan === "yearly" ? "₺349/yıl" : "₺59/ay"}`;
 
   return (
     <View style={{ flex: 1, backgroundColor: colors.bg }}>
       <StatusBar barStyle="light-content" />
       <NebulaBg seed={11} />
+      <LinearGradient
+        colors={["#4a1570", "#1a0e3d", "#0d0820"] as any}
+        locations={[0, 0.4, 0.8]}
+        start={{ x: 0.5, y: -0.1 }}
+        end={{ x: 0.5, y: 0.8 }}
+        style={StyleSheet.absoluteFill}
+        pointerEvents="none"
+      />
+      <Starfield seed={77} count={60} />
 
       <View style={{ position: "absolute", top: 80, left: 0, right: 0, alignItems: "center" }}>
         <Rotator duration={25000}>
@@ -53,9 +120,14 @@ export default function Paywall() {
           </Pressable>
 
           <FadeUp delay={50} style={{ alignItems: "center" }}>
-            <View style={styles.badge}>
+            <LinearGradient
+              colors={gradients.badge as any}
+              start={{ x: 0, y: 0 }}
+              end={{ x: 1, y: 1 }}
+              style={styles.badge}
+            >
               <Text style={styles.badgeText}>✦  KOZMOS PRO</Text>
-            </View>
+            </LinearGradient>
             <Text style={styles.hero}>
               yıldızlar seninle{"\n"}
               <Text style={{ color: colors.accent }}>her zaman konuşsun.</Text>
@@ -65,38 +137,50 @@ export default function Paywall() {
             </Text>
           </FadeUp>
 
-          <View style={{ marginTop: 24 }}>
-            {FEATURES.map((f, i) => (
-              <FadeUp key={i} delay={i * 90}>
-                <View style={styles.feature}>
-                  <View style={styles.featIcon}>
-                    <Text style={{ fontSize: 18, color: colors.accent }}>{f.icon}</Text>
-                  </View>
-                  <View style={{ flex: 1 }}>
-                    <Text style={{ fontSize: 14, fontWeight: "500", color: colors.text }}>{f.label}</Text>
-                    <Text style={{ fontSize: 12, color: colors.textMute, marginTop: 2 }}>{f.desc}</Text>
-                  </View>
-                  <Text style={{ color: colors.accent, fontSize: 14 }}>✓</Text>
-                </View>
-              </FadeUp>
-            ))}
-          </View>
+          <FeatureList features={FEATURES} />
 
           <View style={{ flexDirection: "row", gap: 10, marginTop: 24 }}>
-            <PlanOption id="yearly" label="Yıllık" price="₺29/ay" badge="%50 indirim" selected={plan === "yearly"} onPress={() => setPlan("yearly")} />
-            <PlanOption id="monthly" label="Aylık" price="₺59/ay" selected={plan === "monthly"} onPress={() => setPlan("monthly")} />
+            <PlanCard
+              label="Yıllık"
+              price="₺29/ay"
+              badge="%50 indirim"
+              selected={plan === "yearly"}
+              onPress={() => setPlan("yearly")}
+            />
+            <PlanCard
+              label="Aylık"
+              price="₺59/ay"
+              sub="aylık yenilenir"
+              selected={plan === "monthly"}
+              onPress={() => setPlan("monthly")}
+            />
           </View>
 
           <View style={{ flex: 1 }} />
 
           <FadeUp delay={350} style={{ marginTop: 24 }}>
-            <Button onPress={purchase}>7 Gün Ücretsiz Dene ✦</Button>
-            <Text style={{ textAlign: "center", fontSize: 11, color: colors.textMute, marginTop: 10, fontFamily: fonts.mono }}>
-              istediğin zaman iptal edebilirsin
-            </Text>
-            <Pressable onPress={close} style={{ alignItems: "center", marginTop: 10 }}>
-              <Text style={{ fontSize: 13, color: colors.textMute }}>şimdilik devam et →</Text>
-            </Pressable>
+            <Animated.View
+              style={[
+                {
+                  borderRadius: 27,
+                  shadowColor: "#c4a4ff",
+                  shadowRadius: 24,
+                  shadowOffset: { width: 0, height: 0 },
+                },
+                ctaGlowStyle,
+              ]}
+            >
+              <Button onPress={onPurchase} loading={purchasing}>7 Gün Ücretsiz Dene ✦</Button>
+            </Animated.View>
+
+            <PaywallFooter
+              onRestore={onRestore}
+              restoring={restoring}
+              privacyUrl={PRIVACY_URL}
+              termsUrl={TERMS_URL}
+              trialNote={trialNote}
+              onClose={close}
+            />
           </FadeUp>
         </ScrollView>
       </SafeAreaView>
@@ -104,79 +188,9 @@ export default function Paywall() {
   );
 }
 
-function PlanOption({ label, price, badge, selected, onPress }: any) {
-  return (
-    <Pressable
-      onPress={onPress}
-      style={[
-        styles.plan,
-        {
-          borderColor: selected ? colors.accent : "rgba(196,170,255,0.15)",
-          backgroundColor: selected ? "rgba(196,170,255,0.12)" : "rgba(255,255,255,0.04)",
-        },
-      ]}
-    >
-      {badge && (
-        <View style={styles.planBadge}>
-          <Text style={styles.planBadgeText}>{badge}</Text>
-        </View>
-      )}
-      <Text style={{ fontSize: 12, color: colors.textDim, marginBottom: 4 }}>{label}</Text>
-      <Text style={{ fontSize: 18, fontWeight: "700", color: selected ? colors.text : colors.textDim }}>{price}</Text>
-    </Pressable>
-  );
-}
-
 const styles = StyleSheet.create({
   close: { position: "absolute", top: 8, right: 12, width: 36, height: 36, alignItems: "center", justifyContent: "center", zIndex: 10 },
-  badge: {
-    paddingHorizontal: 16,
-    paddingVertical: 6,
-    borderRadius: 99,
-    backgroundColor: "#c4a4ff",
-    marginBottom: 18,
-  },
+  badge: { paddingHorizontal: 16, paddingVertical: 6, borderRadius: 99, marginBottom: 18 },
   badgeText: { fontSize: 11, fontFamily: fonts.mono, color: "#1a0e3d", fontWeight: "700", letterSpacing: 2 },
-  hero: {
-    fontFamily: fonts.display,
-    fontSize: 30,
-    color: "#fff",
-    textAlign: "center",
-    lineHeight: 36,
-  },
-  feature: {
-    flexDirection: "row",
-    alignItems: "center",
-    gap: 14,
-    paddingVertical: 11,
-    borderBottomWidth: 1,
-    borderBottomColor: "rgba(196,170,255,0.08)",
-  },
-  featIcon: {
-    width: 38,
-    height: 38,
-    borderRadius: 12,
-    backgroundColor: "rgba(196,170,255,0.15)",
-    borderWidth: 1,
-    borderColor: "rgba(196,170,255,0.25)",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  plan: {
-    flex: 1,
-    padding: 14,
-    borderRadius: 18,
-    borderWidth: 1.5,
-    alignItems: "center",
-    position: "relative",
-  },
-  planBadge: {
-    position: "absolute",
-    top: -10,
-    backgroundColor: "#ff9ad1",
-    borderRadius: 99,
-    paddingHorizontal: 10,
-    paddingVertical: 3,
-  },
-  planBadgeText: { fontSize: 9, fontFamily: fonts.mono, color: "#1a0e3d", fontWeight: "700", letterSpacing: 1 },
+  hero: { fontFamily: fonts.display, fontSize: 32, color: "#fff", textAlign: "center", lineHeight: 38 },
 });

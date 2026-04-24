@@ -16,7 +16,36 @@
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.kozmos.app",
-      "buildNumber": "1"
+      "buildNumber": "1",
+      "usesAppleSignIn": true,
+      "config": {
+        "usesNonExemptEncryption": false
+      },
+      "infoPlist": {
+        "NSCameraUsageDescription": "Kahve falı fotoğrafı çekmek için kamera erişimi.",
+        "NSPhotoLibraryUsageDescription": "Kozmos, fal yorumlamak için fotoğraf seçmene izin ister.",
+        "ITSAppUsesNonExemptEncryption": false
+      },
+      "privacyManifests": {
+        "NSPrivacyAccessedAPITypes": [
+          {
+            "NSPrivacyAccessedAPIType": "NSPrivacyAccessedAPICategoryUserDefaults",
+            "NSPrivacyAccessedAPITypeReasons": ["CA92.1"]
+          },
+          {
+            "NSPrivacyAccessedAPIType": "NSPrivacyAccessedAPICategoryFileTimestamp",
+            "NSPrivacyAccessedAPITypeReasons": ["C617.1"]
+          },
+          {
+            "NSPrivacyAccessedAPIType": "NSPrivacyAccessedAPICategorySystemBootTime",
+            "NSPrivacyAccessedAPITypeReasons": ["35F9.1"]
+          },
+          {
+            "NSPrivacyAccessedAPIType": "NSPrivacyAccessedAPICategoryDiskSpace",
+            "NSPrivacyAccessedAPITypeReasons": ["E174.1"]
+          }
+        ]
+      }
     },
     "android": {
       "package": "com.kozmos.app",
@@ -26,7 +55,16 @@
         "backgroundColor": "#0B0B1A"
       },
       "edgeToEdgeEnabled": true,
-      "predictiveBackGestureEnabled": false
+      "predictiveBackGestureEnabled": false,
+      "permissions": ["INTERNET"],
+      "blockedPermissions": [
+        "ACCESS_COARSE_LOCATION",
+        "ACCESS_FINE_LOCATION",
+        "RECORD_AUDIO",
+        "READ_CONTACTS",
+        "READ_CALENDAR",
+        "WRITE_CALENDAR"
+      ]
     },
     "web": {
       "favicon": "./assets/favicon.png",
@@ -35,6 +73,7 @@
     "plugins": [
       "expo-router",
       "expo-secure-store",
+      "expo-apple-authentication",
       [
         "expo-notifications",
         {
@@ -45,7 +84,8 @@
       [
         "expo-image-picker",
         {
-          "photosPermission": "Kozmos, fal yorumlamak için fotoğraf seçmene izin ister."
+          "photosPermission": "Kozmos, fal yorumlamak için fotoğraf seçmene izin ister.",
+          "cameraPermission": "Kahve falı fotoğrafı çekmek için kamera erişimi."
         }
       ],
       "expo-video",

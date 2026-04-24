@@ -1,28 +1,38 @@
-import { useEffect, useRef } from "react";
-import { Animated } from "react-native";
+import { useEffect } from "react";
+import type { ViewStyle, StyleProp } from "react-native";
+import Animated, {
+  useSharedValue,
+  useAnimatedStyle,
+  withTiming,
+  withDelay,
+  Easing,
+} from "react-native-reanimated";
 
-export function FadeUp({
-  delay = 0,
-  duration = 500,
-  offset = 8,
-  children,
-  style,
-}: {
+type Props = {
   delay?: number;
   duration?: number;
   offset?: number;
   children: React.ReactNode;
-  style?: any;
-}) {
-  const opacity = useRef(new Animated.Value(0)).current;
-  const y = useRef(new Animated.Value(offset)).current;
+  style?: StyleProp<ViewStyle>;
+};
+
+/**
+ * kz-fade-up equivalent — Reanimated 3 worklet.
+ */
+export function FadeUp({ delay = 0, duration = 500, offset = 8, children, style }: Props) {
+  const progress = useSharedValue(0);
 
   useEffect(() => {
-    Animated.parallel([
-      Animated.timing(opacity, { toValue: 1, duration, delay, useNativeDriver: true }),
-      Animated.timing(y, { toValue: 0, duration, delay, useNativeDriver: true }),
-    ]).start();
-  }, []);
+    progress.value = withDelay(
+      delay,
+      withTiming(1, { duration, easing: Easing.out(Easing.cubic) }),
+    );
+  }, [delay, duration, progress]);
 
-  return <Animated.View style={[{ opacity, transform: [{ translateY: y }] }, style]}>{children}</Animated.View>;
+  const animStyle = useAnimatedStyle(() => ({
+    opacity: progress.value,
+    transform: [{ translateY: (1 - progress.value) * offset }],
+  }));
+
+  return <Animated.View style={[animStyle, style]}>{children}</Animated.View>;
 }

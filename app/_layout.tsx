@@ -1,7 +1,12 @@
 import "../global.css";
 import "@/lib/i18n";
 import { useEffect } from "react";
-import { View } from "react-native";
+import { View, LogBox } from "react-native";
+
+LogBox.ignoreLogs([
+  "expo-notifications:",
+  "`expo-notifications` functionality is not fully supported",
+]);
 import { Stack, SplashScreen, useRouter, useSegments } from "expo-router";
 import { useFonts } from "@/hooks/useFonts";
 import { Provider } from "react-redux";
@@ -80,6 +85,9 @@ function AppShell() {
   useAuthBootstrap();
   usePushBootstrap();
   const [fontsLoaded] = useFonts();
+  useEffect(() => {
+    if (fontsLoaded) SplashScreen.hideAsync().catch(() => {});
+  }, [fontsLoaded]);
   if (!fontsLoaded) return <View style={{ flex: 1, backgroundColor: "#0d0820" }} />;
   return (
     <>

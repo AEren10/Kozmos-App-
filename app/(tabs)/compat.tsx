@@ -1,6 +1,14 @@
 // Birebir port: kozmosgenel/src/screens-main.jsx — ScreenCompat
-import { useState, useEffect, useRef } from "react";
-import { View, Text, ScrollView, Pressable, StyleSheet, ActivityIndicator, Animated, Easing } from "react-native";
+import { useState, useEffect } from "react";
+import { View, Text, ScrollView, Pressable, StyleSheet, ActivityIndicator } from "react-native";
+import Animated, {
+  useSharedValue,
+  useAnimatedStyle,
+  useAnimatedProps,
+  withTiming,
+  withDelay,
+  Easing,
+} from "react-native-reanimated";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Svg, { Circle, Defs, LinearGradient as SvgLinearGradient, Stop } from "react-native-svg";
 import { useTranslation } from "react-i18next";
@@ -19,38 +27,40 @@ import type { SynastryResult } from "@/types";
 import { colors, fonts } from "@/constants/theme";
 
 const AnimatedCircle = Animated.createAnimatedComponent(Circle);
+const CIRC = 2 * Math.PI * 46;
 
 function ScoreRing({ score }: { score: number }) {
-  const progress = useRef(new Animated.Value(0)).current;
+  const progress = useSharedValue(0);
 
   useEffect(() => {
-    Animated.timing(progress, { toValue: score, duration: 1400, easing: Easing.out(Easing.cubic), useNativeDriver: false }).start();
+    progress.value = withTiming(score, { duration: 1400, easing: Easing.out(Easing.cubic) });
   }, [progress, score]);
 
-  const C = 2 * Math.PI * 30;
-  const dashoffset = progress.interpolate({ inputRange: [0, 100], outputRange: [C, 0] });
+  const circleProps = useAnimatedProps(() => ({
+    strokeDashoffset: CIRC - (CIRC * progress.value) / 100,
+  }));
 
   return (
-    <View style={{ position: "relative", width: 72, height: 72 }}>
-      <Svg width={72} height={72} viewBox="0 0 72 72">
+    <View style={{ position: "relative", width: 104, height: 104 }}>
+      <Svg width={104} height={104} viewBox="0 0 104 104">
         <Defs>
           <SvgLinearGradient id="compat-grad" x1="0" y1="0" x2="1" y2="0">
             <Stop offset="0" stopColor="#c4a4ff" />
             <Stop offset="1" stopColor="#ff9ad1" />
           </SvgLinearGradient>
         </Defs>
-        <Circle cx={36} cy={36} r={30} fill="none" stroke="rgba(255,255,255,0.1)" strokeWidth={4} />
+        <Circle cx={52} cy={52} r={46} fill="none" stroke="rgba(255,255,255,0.1)" strokeWidth={4} />
         <AnimatedCircle
-          cx={36}
-          cy={36}
-          r={30}
+          cx={52}
+          cy={52}
+          r={46}
           fill="none"
           stroke="url(#compat-grad)"
           strokeWidth={4}
           strokeLinecap="round"
-          strokeDasharray={C}
-          strokeDashoffset={dashoffset as any}
-          transform="rotate(-90 36 36)"
+          strokeDasharray={CIRC}
+          transform="rotate(-90 52 52)"
+          animatedProps={circleProps}
         />
       </Svg>
       <View style={StyleSheet.absoluteFillObject}>
@@ -82,11 +92,24 @@ function PersonCard({ letter, name, sign, color, side }: { letter: string; name:
   );
 }
 
-function AspectRow({ label, score, color, desc, delay }: any) {
-  const width = useRef(new Animated.Value(0)).current;
+function AspectRow({
+  label,
+  score,
+  color,
+  desc,
+  delay,
+}: {
+  label: string;
+  score: number;
+  color: string;
+  desc: string;
+  delay: number;
+}) {
+  const w = useSharedValue(0);
   useEffect(() => {
-    Animated.timing(width, { toValue: score, duration: 800, delay, easing: Easing.out(Easing.cubic), useNativeDriver: false }).start();
-  }, [delay, score, width]);
+    w.value = withDelay(delay, withTiming(score, { duration: 800, easing: Easing.out(Easing.cubic) }));
+  }, [delay, score, w]);
+  const fillStyle = useAnimatedStyle(() => ({ width: `${w.value}%` }));
   return (
     <View style={styles.aspectRow}>
       <View style={{ flex: 1 }}>
@@ -96,7 +119,7 @@ function AspectRow({ label, score, color, desc, delay }: any) {
       <View style={{ alignItems: "flex-end" }}>
         <Text style={{ fontSize: 15, fontWeight: "700", color, fontFamily: fonts.mono }}>{score}</Text>
         <View style={{ width: 50, height: 4, borderRadius: 2, marginTop: 5, backgroundColor: "rgba(255,255,255,0.08)", overflow: "hidden" }}>
-          <Animated.View style={{ height: "100%", backgroundColor: color, width: width.interpolate({ inputRange: [0, 100], outputRange: ["0%", "100%"] }) }} />
+          <Animated.View style={[{ height: "100%", backgroundColor: color }, fillStyle]} />
         </View>
       </View>
     </View>
@@ -254,16 +277,17 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   avatar: {
-    width: 42,
-    height: 42,
-    borderRadius: 21,
+    width: 56,
+    height: 56,
+    borderRadius: 28,
     alignItems: "center",
     justifyContent: "center",
     marginBottom: 8,
   },
   aspectRow: {
     marginBottom: 10,
-    padding: 12,
+    height: 56,
+    paddingHorizontal: 12,
     borderRadius: 14,
     backgroundColor: "rgba(255,255,255,0.04)",
     borderWidth: 1,

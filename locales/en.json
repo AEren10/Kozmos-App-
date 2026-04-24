@@ -8,7 +8,8 @@
     "loading": "Loading...",
     "error": "Something went wrong",
     "retry": "Try again",
-    "optional": "(optional)"
+    "optional": "(optional)",
+    "comingSoon": "Soon"
   },
   "errors": {
     "saveFailed": "Couldn't save your profile. Please try again.",
@@ -25,7 +26,16 @@
     "haveAccount": "Already have an account",
     "noAccount": "Don't have an account? Sign up",
     "logout": "Log out",
-    "tagline": "The stars await you."
+    "tagline": "The stars await you.",
+    "appleIosOnly": "Sign in with Apple works on iOS only.",
+    "appleUnavailable": "Sign in with Apple is not available on this device.",
+    "appleFailed": "Sign in with Apple failed.",
+    "googleSoon": "Google sign-in coming soon",
+    "forgotPassword": "forgot password →",
+    "forgotPrompt": "Enter your email to receive a reset link",
+    "forgotEmailMissing": "Enter your email first",
+    "forgotSent": "Password reset email sent",
+    "forgotFailed": "Could not send reset email"
   },
   "intro": {
     "slide1": {
@@ -147,7 +157,12 @@
     "cta": "Go Plus",
     "continue": "Not now",
     "restore": "Restore purchases",
-    "terms": "Subscription auto-renews. Cancel anytime."
+    "restoreSoon": "Restore will be enabled soon",
+    "restoreSuccess": "Your purchases have been restored",
+    "purchaseSuccess": "Kozmos Pro active ✦",
+    "terms": "Terms of Service",
+    "privacy": "Privacy Policy",
+    "autoRenewDisclaimer": "Subscription auto-renews unless canceled at least 24 hours before the end of the current period. Payment is charged to your iTunes/Play account. You can cancel anytime in your account settings."
   },
   "tabs": {
     "today": "Today",
@@ -173,6 +188,9 @@
     "sun": "Sun",
     "moon": "Moon",
     "rising": "Rising",
+    "mercury": "Mercury",
+    "venus": "Venus",
+    "mars": "Mars",
     "needTime": "— birth time needed",
     "needTimeAndPlace": "— birth time and place needed",
     "fullReport": "Full Report (PDF) — $9.99"
@@ -221,6 +239,11 @@
     "restorePurchases": "Restore purchases",
     "resetOnboarding": "Reset onboarding",
     "deleteAccount": "Delete account",
+    "deleteAccountConfirm": "We will permanently delete your account and all data. This cannot be undone.",
+    "deleteAccountDone": "Your account has been deleted.",
+    "privacyPolicy": "Privacy Policy",
+    "termsOfService": "Terms of Service",
+    "version": "Version",
     "disclaimer": "For entertainment only. Not professional advice.",
     "themeOptions": { "dark": "Dark", "light": "Light", "system": "System" },
     "langOptions": { "tr": "Türkçe", "en": "English" }

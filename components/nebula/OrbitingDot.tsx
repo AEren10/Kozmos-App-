@@ -1,9 +1,15 @@
-import { useEffect, useRef } from "react";
-import { Animated, Easing, View } from "react-native";
+import { useEffect } from "react";
+import { View } from "react-native";
+import Animated, {
+  useSharedValue,
+  useAnimatedStyle,
+  withRepeat,
+  withTiming,
+  Easing,
+} from "react-native-reanimated";
 
 /**
- * Ring üzerinde dönen nokta — tasarımdaki kz-orbit animasyonu.
- * radius = yarıçap; size = nokta boyutu; duration = tam tur süresi
+ * kz-orbit — point traces circular orbit of given radius.
  */
 export function OrbitingDot({
   radius,
@@ -20,34 +26,32 @@ export function OrbitingDot({
   reverse?: boolean;
   glow?: boolean;
 }) {
-  const rotate = useRef(new Animated.Value(0)).current;
+  const t = useSharedValue(0);
 
   useEffect(() => {
-    Animated.loop(
-      Animated.timing(rotate, {
-        toValue: 1,
-        duration,
-        easing: Easing.linear,
-        useNativeDriver: true,
-      }),
-    ).start();
-  }, [duration, rotate]);
+    t.value = withRepeat(
+      withTiming(1, { duration, easing: Easing.linear }),
+      -1,
+      false,
+    );
+  }, [duration, t]);
 
-  const spin = rotate.interpolate({
-    inputRange: [0, 1],
-    outputRange: reverse ? ["360deg", "0deg"] : ["0deg", "360deg"],
-  });
+  const style = useAnimatedStyle(() => ({
+    transform: [{ rotate: `${(reverse ? -1 : 1) * t.value * 360}deg` }],
+  }));
 
   return (
     <Animated.View
       pointerEvents="none"
-      style={{
-        position: "absolute",
-        width: radius * 2,
-        height: radius * 2,
-        alignItems: "center",
-        transform: [{ rotate: spin }],
-      }}
+      style={[
+        {
+          position: "absolute",
+          width: radius * 2,
+          height: radius * 2,
+          alignItems: "center",
+        },
+        style,
+      ]}
     >
       <View
         style={{

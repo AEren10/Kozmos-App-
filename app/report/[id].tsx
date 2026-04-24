@@ -9,6 +9,7 @@ import { useAppSelector } from "@/store";
 import { numerology } from "@/lib/api/numerology";
 import { nameCompatibility } from "@/lib/api/nameCompat";
 import { pastLifeReading } from "@/lib/api/pastLife";
+import { shareText } from "@/lib/share";
 import { colors } from "@/constants/theme";
 
 export default function ReportScreen() {
@@ -56,7 +57,16 @@ export default function ReportScreen() {
           <Body style={{ lineHeight: 24 }}>{content}</Body>
         </Card>
       )}
-      <Button variant="ghost" onPress={() => router.back()} style={{ marginTop: 20 }}>
+      {content && (
+        <Button
+          variant="secondary"
+          onPress={() => void shareText(`✨ ${title}\n\n${content}`)}
+          style={{ marginTop: 16 }}
+        >
+          Paylaş ↗
+        </Button>
+      )}
+      <Button variant="ghost" onPress={() => router.back()} style={{ marginTop: 12 }}>
         Kapat
       </Button>
       <Caption style={{ textAlign: "center", marginTop: 12, color: colors.textMute }}>

@@ -4,7 +4,9 @@ import { View, Text, Pressable, ScrollView, StatusBar } from "react-native";
 import { Link, useRouter } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useTranslation } from "react-i18next";
+import { LinearGradient } from "expo-linear-gradient";
 import { NebulaBg, FadeUp } from "@/components/nebula";
+import { gradients } from "@/constants/designTokens";
 import { Input } from "@/components/ui/Input";
 import { Button } from "@/components/ui/Button";
 import { H1 } from "@/components/ui/Heading";
@@ -91,11 +93,13 @@ export default function Register() {
           {/* Password strength bar */}
           <FadeUp delay={340} style={{ position: "relative", marginBottom: 20 }}>
             <View style={{ height: 3, borderRadius: 2, backgroundColor: "rgba(255,255,255,0.08)", overflow: "hidden" }}>
-              <View
+              <LinearGradient
+                colors={gradients.strength as any}
+                start={{ x: 0, y: 0 }}
+                end={{ x: 1, y: 0 }}
                 style={{
                   width: `${s.pct}%`,
                   height: "100%",
-                  backgroundColor: colors.accent,
                   shadowColor: colors.accent,
                   shadowOpacity: 0.6,
                   shadowRadius: 8,
@@ -115,7 +119,7 @@ export default function Register() {
                   width: 20,
                   height: 20,
                   borderRadius: 6,
-                  backgroundColor: agree ? colors.accent : "transparent",
+                  overflow: "hidden",
                   borderWidth: agree ? 0 : 1,
                   borderColor: colors.border,
                   alignItems: "center",
@@ -123,7 +127,16 @@ export default function Register() {
                   marginTop: 1,
                 }}
               >
-                {agree && <Text style={{ color: colors.bgDeep, fontSize: 11, fontWeight: "700" }}>✓</Text>}
+                {agree && (
+                  <LinearGradient
+                    colors={gradients.cta as any}
+                    start={{ x: 0, y: 0 }}
+                    end={{ x: 1, y: 1 }}
+                    style={{ position: "absolute", top: 0, left: 0, right: 0, bottom: 0, alignItems: "center", justifyContent: "center" }}
+                  >
+                    <Text style={{ color: colors.bgDeep, fontSize: 11, fontWeight: "700" }}>✓</Text>
+                  </LinearGradient>
+                )}
               </View>
               <Text style={{ flex: 1, color: colors.textMute, fontSize: 12, lineHeight: 18 }}>
                 <Text style={{ color: colors.accent }}>kullanım şartlarını</Text> ve{" "}
@@ -141,7 +154,8 @@ export default function Register() {
           <FadeUp delay={520} style={{ marginTop: 14 }}>
             <View
               style={{
-                padding: 12,
+                paddingHorizontal: 14,
+                paddingVertical: 10,
                 borderRadius: 12,
                 backgroundColor: "rgba(196,170,255,0.07)",
                 borderWidth: 1,

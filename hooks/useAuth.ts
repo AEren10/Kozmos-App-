@@ -15,6 +15,12 @@ export function useAuthBootstrap() {
     }
     let cancelled = false;
 
+    // Hydration'ı Supabase'e bağlı bırakma: 3 sn içinde cevap gelmezse UI açılsın,
+    // session sonradan gelirse onAuthStateChange zaten state'i günceller.
+    const hydrationTimeout = setTimeout(() => {
+      if (!cancelled) dispatch(hydrated());
+    }, 3000);
+
     supabase.auth.getSession().then(async ({ data: { session } }) => {
       if (cancelled) return;
       if (session?.user) {
@@ -26,6 +32,10 @@ export function useAuthBootstrap() {
           if (!cancelled) dispatch(markProfileSynced());
         }
       }
+      clearTimeout(hydrationTimeout);
+      if (!cancelled) dispatch(hydrated());
+    }).catch(() => {
+      clearTimeout(hydrationTimeout);
       if (!cancelled) dispatch(hydrated());
     });
 
@@ -67,4 +77,11 @@ export async function signUpWithEmail(email: string, password: string) {
 
 export async function signOut() {
   await supabase.auth.signOut();
+}
+
+export async function resetPassword(email: string) {
+  const { error } = await supabase.auth.resetPasswordForEmail(email, {
+    redirectTo: "https://kozmos.app/reset",
+  });
+  if (error) throw error;
 }

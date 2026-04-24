@@ -1,13 +1,16 @@
-// Birebir port: kozmosgenel/src/screens-onboarding.jsx — ScreenLogin
 import { useState } from "react";
-import { View, Text, Pressable, StyleSheet, StatusBar, ScrollView } from "react-native";
+import { View, Text, Pressable, StyleSheet, StatusBar, ScrollView, Platform, Alert } from "react-native";
 import { Link } from "expo-router";
 import { LinearGradient } from "expo-linear-gradient";
 import { useTranslation } from "react-i18next";
-import { NebulaBg, Orb, OrbitRings, Rotator, OrbitingDot, FadeUp } from "@/components/nebula";
+import { NebulaBg, FadeUp } from "@/components/nebula";
 import { Input } from "@/components/ui/Input";
 import { Button } from "@/components/ui/Button";
-import { signInWithEmail } from "@/hooks/useAuth";
+import { AuthOrbit } from "@/components/auth/AuthOrbit";
+import { SocialAuthRow } from "@/components/auth/SocialAuthRow";
+import { AppleAuthentication } from "@/components/auth/appleAuth";
+import { signInWithEmail, resetPassword } from "@/hooks/useAuth";
+import { supabase } from "@/lib/supabase";
 import { useAppDispatch } from "@/store";
 import { toast } from "@/store/slices/uiSlice";
 import { colors, fonts } from "@/constants/theme";
@@ -18,16 +21,111 @@ export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
+  const [appleLoading, setAppleLoading] = useState(false);
+  const [forgotLoading, setForgotLoading] = useState(false);
 
   const onSubmit = async () => {
-    if (!email || !password) return dispatch(toast({ text: "E-posta ve şifre gerekli", type: "error" }));
+    if (loading) return;
+    if (!email || !password) {
+      dispatch(toast({ text: "E-posta ve şifre gerekli", type: "error" }));
+      return;
+    }
     setLoading(true);
     try {
       await signInWithEmail(email, password);
-    } catch (e: any) {
-      dispatch(toast({ text: e.message ?? "Giriş hatası", type: "error" }));
+    } catch (e) {
+      const msg = e instanceof Error ? e.message : "Giriş hatası";
+      dispatch(toast({ text: msg, type: "error" }));
     } finally {
       setLoading(false);
+    }
+  };
+
+  const onApple = async () => {
+    if (Platform.OS !== "ios") {
+      dispatch(toast({ text: t("auth.appleIosOnly"), type: "info" }));
+      return;
+    }
+    if (!AppleAuthentication) {
+      dispatch(toast({ text: t("auth.appleUnavailable"), type: "error" }));
+      return;
+    }
+    if (appleLoading) return;
+    setAppleLoading(true);
+    try {
+      const available = await AppleAuthentication.isAvailableAsync();
+      if (!available) {
+        dispatch(toast({ text: t("auth.appleUnavailable"), type: "error" }));
+        return;
+      }
+      const cred = await AppleAuthentication.signInAsync({
+        requestedScopes: [
+          AppleAuthentication.AppleAuthenticationScope.EMAIL,
+          AppleAuthentication.AppleAuthenticationScope.FULL_NAME,
+        ],
+      });
+      if (!cred.identityToken) {
+        dispatch(toast({ text: t("auth.appleFailed"), type: "error" }));
+        return;
+      }
+      const { error } = await supabase.auth.signInWithIdToken({
+        provider: "apple",
+        token: cred.identityToken,
+      });
+      if (error) throw error;
+    } catch (e) {
+      if (e && typeof e === "object" && "code" in e && (e as { code?: string }).code === "ERR_REQUEST_CANCELED") {
+        return;
+      }
+      const msg = e instanceof Error ? e.message : t("auth.appleFailed");
+      dispatch(toast({ text: msg, type: "error" }));
+    } finally {
+      setAppleLoading(false);
+    }
+  };
+
+  const onGoogle = () => {
+    dispatch(toast({ text: t("auth.googleSoon"), type: "info" }));
+  };
+
+  const runReset = async (mail: string) => {
+    const target = (mail ?? "").trim();
+    if (!target) {
+      dispatch(toast({ text: t("auth.forgotEmailMissing"), type: "error" }));
+      return;
+    }
+    if (forgotLoading) return;
+    setForgotLoading(true);
+    try {
+      await resetPassword(target);
+      dispatch(toast({ text: t("auth.forgotSent"), type: "success" }));
+    } catch (e) {
+      const msg = e instanceof Error ? e.message : t("auth.forgotFailed");
+      dispatch(toast({ text: msg, type: "error" }));
+    } finally {
+      setForgotLoading(false);
+    }
+  };
+
+  const onForgot = () => {
+    if (email.trim()) {
+      void runReset(email);
+      return;
+    }
+    if (Platform.OS === "ios") {
+      Alert.prompt(
+        t("auth.forgotPassword"),
+        t("auth.forgotPrompt"),
+        [
+          { text: t("common.cancel"), style: "cancel" },
+          { text: t("common.continue"), onPress: (v?: string) => void runReset(v ?? "") },
+        ],
+        "plain-text",
+        "",
+        "email-address",
+      );
+    } else {
+      dispatch(toast({ text: t("auth.forgotEmailMissing"), type: "info" }));
     }
   };
 
@@ -36,32 +134,15 @@ export default function Login() {
       <StatusBar barStyle="light-content" />
       <NebulaBg seed={1} />
 
-      {/* Floating orb — top 60, 160x160 */}
       <View style={styles.orbWrap}>
-        {/* dashed orbit ring 200x200, rotate 18s */}
-        <View style={{ position: "absolute", width: 200, height: 200, alignItems: "center", justifyContent: "center" }}>
-          <Rotator duration={18000}>
-            <OrbitRings size={200} color="rgba(196,170,255,0.25)" count={1} />
-          </Rotator>
-          <OrbitingDot radius={95} size={6} color="#ff9ad1" duration={18000} />
-        </View>
-        {/* reverse ring 180x180, rotate 12s reverse */}
-        <View style={{ position: "absolute", width: 180, height: 180, alignItems: "center", justifyContent: "center" }}>
-          <Rotator duration={12000} reverse>
-            <OrbitRings size={180} color="rgba(255,154,209,0.2)" count={1} />
-          </Rotator>
-          <OrbitingDot radius={85} size={5} color="#c4a4ff" duration={12000} reverse />
-        </View>
-        <Orb size={160} />
+        <AuthOrbit />
       </View>
 
-      {/* Logo */}
       <FadeUp delay={100} style={styles.logoWrap}>
         <Text style={styles.logo}>kozmos</Text>
         <Text style={styles.tagline}>YILDIZLARIN REHBERLİĞİNDE</Text>
       </FadeUp>
 
-      {/* Bottom sheet */}
       <LinearGradient
         colors={["transparent", "rgba(13,8,32,0.95)"]}
         locations={[0, 0.2]}
@@ -73,19 +154,8 @@ export default function Login() {
         keyboardShouldPersistTaps="handled"
       >
         <FadeUp delay={200} style={styles.sheet}>
-          {/* Social auth */}
-          <View style={{ flexDirection: "row", gap: 10, marginBottom: 20 }}>
-            <Pressable style={[styles.socialBtn, { backgroundColor: "rgba(255,255,255,0.96)" }]}>
-              <Text style={{ fontSize: 15 }}>⬡</Text>
-              <Text style={{ color: "#1a0e3d", fontSize: 13, fontWeight: "600", marginLeft: 6 }}>Apple ile gir</Text>
-            </Pressable>
-            <Pressable style={[styles.socialBtn, { backgroundColor: "rgba(255,255,255,0.08)" }]}>
-              <Text style={{ fontSize: 15, color: colors.text }}>◉</Text>
-              <Text style={{ color: colors.text, fontSize: 13, fontWeight: "600", marginLeft: 6 }}>Google ile gir</Text>
-            </Pressable>
-          </View>
+          <SocialAuthRow onApple={onApple} onGoogle={onGoogle} appleLoading={appleLoading} />
 
-          {/* Divider */}
           <View style={{ flexDirection: "row", alignItems: "center", gap: 10, marginBottom: 16 }}>
             <View style={{ flex: 1, height: 0.5, backgroundColor: "rgba(196,170,255,0.2)" }} />
             <Text style={{ fontSize: 11, color: colors.textMute, fontFamily: fonts.mono, letterSpacing: 2 }}>veya</Text>
@@ -102,8 +172,14 @@ export default function Login() {
           />
           <Input secureTextEntry value={password} onChangeText={setPassword} placeholder="şifre" icon="✦" />
 
-          <Pressable style={{ alignSelf: "flex-end", marginBottom: 16, marginTop: -6 }}>
-            <Text style={{ color: colors.accent, fontSize: 12, fontFamily: fonts.displayReg }}>şifremi unuttum →</Text>
+          <Pressable
+            onPress={onForgot}
+            disabled={forgotLoading}
+            style={{ alignSelf: "flex-end", marginBottom: 16, marginTop: -6, opacity: forgotLoading ? 0.5 : 1 }}
+          >
+            <Text style={{ color: colors.accent, fontSize: 12, fontFamily: fonts.displayReg }}>
+              {forgotLoading ? t("common.loading") : t("auth.forgotPassword")}
+            </Text>
           </Pressable>
 
           <Button onPress={onSubmit} loading={loading}>Giriş Yap</Button>
@@ -127,7 +203,7 @@ export default function Login() {
 const styles = StyleSheet.create({
   orbWrap: {
     position: "absolute",
-    top: 70,
+    top: 60,
     left: 0,
     right: 0,
     alignItems: "center",
@@ -137,7 +213,7 @@ const styles = StyleSheet.create({
   },
   logoWrap: {
     position: "absolute",
-    top: 236,
+    top: 198,
     left: 0,
     right: 0,
     alignItems: "center",
@@ -147,17 +223,21 @@ const styles = StyleSheet.create({
     fontFamily: fonts.display,
     fontSize: 42,
     color: "#fff",
-    letterSpacing: -1,
+    letterSpacing: -0.5,
     textShadowColor: "rgba(196,170,255,0.8)",
     textShadowOffset: { width: 0, height: 0 },
-    textShadowRadius: 30,
+    textShadowRadius: 20,
+    textAlign: "center",
+    paddingHorizontal: 20,
   },
   tagline: {
     fontSize: 11,
     fontFamily: fonts.mono,
-    color: "rgba(196,170,255,0.8)",
+    color: "rgba(240,235,255,0.5)",
+    marginTop: 8,
+    textAlign: "center",
+    paddingHorizontal: 30,
     letterSpacing: 3,
-    marginTop: 6,
   },
   sheetBg: {
     position: "absolute",
@@ -170,15 +250,5 @@ const styles = StyleSheet.create({
     padding: 24,
     paddingTop: 32,
     paddingBottom: 44,
-  },
-  socialBtn: {
-    flex: 1,
-    height: 50,
-    borderRadius: 14,
-    borderWidth: 1,
-    borderColor: "rgba(196,170,255,0.25)",
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "center",
   },
 });
